@@ -379,8 +379,8 @@
 			),
 			prob(5);list(
 				/obj/item/weapon/gun/projectile/luger,
-				/obj/item/ammo_magazine/m9mm/compact,
-				/obj/item/ammo_magazine/m9mm/compact
+				/obj/item/ammo_magazine/m9mm/luger,
+				/obj/item/ammo_magazine/m9mm/luger
 			),
 			prob(4);list(
 				/obj/item/weapon/gun/projectile/luger/brown,
@@ -460,9 +460,9 @@
 				/obj/item/ammo_magazine/s44
 			),
 			prob(1);list(
-				/obj/item/weapon/gun/projectile/revolver/webley/auto,
-				/obj/item/ammo_magazine/s44,
-				/obj/item/ammo_magazine/s44
+				/obj/item/weapon/gun/projectile/revolver/consul,
+				/obj/item/ammo_magazine/s44/rubber,
+				/obj/item/ammo_magazine/s44/rubber
 			)
 		)
 
