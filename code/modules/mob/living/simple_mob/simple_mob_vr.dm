@@ -36,7 +36,7 @@
 	var/vore_stomach_flavor				// The flavortext for the first belly if not the default
 
 	var/vore_default_item_mode = IM_DIGEST_FOOD			//How belly will interact with items
-	var/vore_default_contaminates = TRUE				//Will it contaminate?
+	var/vore_default_contaminates = TRUE				//Will it contaminate? // CHOMPedit: Put back to true like it always was.
 	var/vore_default_contamination_flavor = "Generic"	//Contamination descriptors
 	var/vore_default_contamination_color = "green"		//Contamination color
 
@@ -48,15 +48,19 @@
 	var/mount_offset_x = 5				// Horizontal riding offset.
 	var/mount_offset_y = 8				// Vertical riding offset
 
-	var/obj/item/device/radio/headset/mob_headset/mob_radio		//Adminbus headset for simplemob shenanigans.
+	var/obj/item/device/radio/headset/mob_radio		//Adminbus headset for simplemob shenanigans.
 	does_spin = FALSE
+	can_be_drop_pred = TRUE				// Mobs are pred by default.
+	var/damage_threshold  = 0 //For some mobs, they have a damage threshold required to deal damage to them.
+
 
 	var/voremob_loaded = FALSE //CHOMPedit: On-demand belly loading.
 
 // Release belly contents before being gc'd!
 /mob/living/simple_mob/Destroy()
 	release_vore_contents()
-	prey_excludes.Cut()
+	if(prey_excludes)
+		prey_excludes.Cut()
 	return ..()
 
 //For all those ID-having mobs
@@ -213,6 +217,7 @@
 	// Since they have bellies, add verbs to toggle settings on them.
 	verbs |= /mob/living/simple_mob/proc/toggle_digestion
 	verbs |= /mob/living/simple_mob/proc/toggle_fancygurgle
+	verbs |= /mob/living/proc/vertical_nom
 
 	//A much more detailed version of the default /living implementation
 	var/obj/belly/B = new /obj/belly(src)
@@ -368,21 +373,21 @@
 		visible_message("<span class='notice'>[M] starts riding [name]!</span>")
 
 /mob/living/simple_mob/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name)
-	if(mob_radio)
-		switch(message_mode)
-			if("intercom")
-				for(var/obj/item/device/radio/intercom/I in view(1, null))
-					I.talk_into(src, message, verb, speaking)
-					used_radios += I
-			if("headset")
-				if(mob_radio && istype(mob_radio,/obj/item/device/radio/headset/mob_headset))
-					mob_radio.talk_into(src,message,null,verb,speaking)
+	//CHOMPEdit - This whole proc tbh
+	if(message_mode)
+		if(message_mode == "intercom")
+			for(var/obj/item/device/radio/intercom/I in view(1, null))
+				I.talk_into(src,message,message_mode,verb,speaking)
+				used_radios += I
+		if(message_mode == "headset")
+			if(mob_radio && istype(mob_radio,/obj/item/device/radio/headset))
+				mob_radio.talk_into(src,message,message_mode,verb,speaking)
+				used_radios += mob_radio
+		else
+			if(mob_radio && istype(mob_radio,/obj/item/device/radio/headset))
+				if(mob_radio.channels[message_mode])
+					mob_radio.talk_into(src,message,message_mode,verb,speaking)
 					used_radios += mob_radio
-			else
-				if(message_mode)
-					if(mob_radio && istype(mob_radio,/obj/item/device/radio/headset/mob_headset))
-						mob_radio.talk_into(src,message, message_mode, verb, speaking)
-						used_radios += mob_radio
 	else
 		..()
 

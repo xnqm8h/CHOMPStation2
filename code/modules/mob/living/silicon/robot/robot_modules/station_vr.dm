@@ -208,6 +208,7 @@
 					"Borgi" = "borgi-sec",
 					"Otieborg" = "oties",
 					"Secborg model V-3" = "SecVale", //CHOMPEdit
+					"Cat" = "vixsec", //CHOMPEdit
 					"Drake" = "drakesec"
 					)
 	channels = list("Security" = 1)
@@ -288,6 +289,7 @@
 					"Mediborg model V-2" = "vale",
 					"Borgi" = "borgi-medi",
 					"Mediborg model V-3" = "vale2", //CHOMPEdit
+					"Cat" = "vixmed", //CHOMPEdit
 					"Drake" = "drakemed"
 					)
 
@@ -300,6 +302,7 @@
 	src.modules += new /obj/item/weapon/reagent_containers/glass/beaker/large(src)//For holding the chemicals when the chemist is nice
 	src.modules += new /obj/item/device/sleevemate(src) //Lets them scan people.
 	src.modules += new /obj/item/weapon/shockpaddles/robot/hound(src) //Paws of life
+	src.modules += new /obj/item/weapon/inflatable_dispenser/robot(src) //This is kinda important for rescuing people without making it worse for everyone
 	src.emag 	 = new /obj/item/weapon/dogborg/pounce(src) //Pounce
 	src.modules += new /obj/item/weapon/gripper/medical(src)//Now you can set up cyro or make peri. //CHOMPEdit
 
@@ -351,7 +354,7 @@
 
 	R.icon = 'icons/mob/widerobot_vr.dmi'
 
-	src.modules += new /obj/item/device/dogborg/pounce_module(src) //Pounce shit test
+	src.modules += new /obj/item/weapon/dogborg/pounce(src) //CHOMPEdit - Switch to the more balanced pounce module
 	R.icon = 'icons/mob/widerobot_med_vr.dmi'
 	R.wideborg_dept = 'icons/mob/widerobot_med_vr.dmi'
 	R.hands.icon = 'icons/mob/screen1_robot_vr.dmi'
@@ -387,7 +390,7 @@
 	src.modules += new /obj/item/weapon/gun/energy/taser/mounted/cyborg/ertgun(src)
 	src.modules += new /obj/item/weapon/dogborg/swordtail(src)
 	src.modules += new /obj/item/weapon/tool/crowbar(src)
-	src.modules += new /obj/item/device/dogborg/pounce_module(src) //Pounce shit test
+	src.modules += new /obj/item/weapon/dogborg/pounce(src) //CHOMPEdit - Switch to the more balanced pounce module
 	src.emag     = new /obj/item/weapon/gun/energy/laser/mounted(src)
 
 	var/datum/matter_synth/water = new /datum/matter_synth(500)
@@ -427,6 +430,7 @@
 					"Janihound model V-2" = "J9",
 					"Borgi" = "borgi-jani",
 					"Otieborg" = "otiej",
+					"Cat" = "vixjani", //CHOMPEdit
 					"Drake" = "drakejanit"
 					)
 	channels = list("Service" = 1)
@@ -514,6 +518,7 @@
 					"Borgi" = "borgi-sci",
 					"SciHound" = "scihound",
 					"SciHoundDark" = "scihounddark",
+					"Cat" = "vixsci", //CHOMPEdit
 					"Drake" = "drakesci"
 					)
 	channels = list("Science" = 1)
@@ -596,6 +601,7 @@
 					"V2 Engidog" = "thottbot",
 					"EngiHound" = "engihound",
 					"EngiHoundDark" = "engihounddark",
+					"Cat" = "vixengi", //CHOMPEdit
 					"Drake" = "drakeeng"
 					)
 	channels = list("Engineering" = 1)
@@ -753,6 +759,7 @@
 					"Pinkhound" = "k69",
 					"ServicehoundV2" = "serve2",
 					"ServicehoundV2 Darkmode" = "servedark",
+					"Cat" = "vixserv", //CHOMPEdit
 					"Drake" = "drakemine"
 					)
 	channels = list("Service" = 1)
@@ -829,6 +836,8 @@
 					"KMine" = "kmine",
 					"CargoHound" = "cargohound",
 					"CargoHoundDark" = "cargohounddark",
+					"Cat Mining" = "vixmine", //CHOMPEdit
+					"Cat Cargo" = "vixcargo", //CHOMPEdit
 					"Drake" = "drakemine"
 					)
 	channels = list("Supply" = 1)
@@ -1029,8 +1038,8 @@
 	B.water = water
 	src.modules += B
 
-	R.icon = 'icons/mob/widerobot_ch.dmi'
-	R.wideborg_dept = 'icons/mob/widerobot_ch.dmi'
+	R.icon = 'modular_chomp/icons/mob/widerobot_ch.dmi'
+	R.wideborg_dept = 'modular_chomp/icons/mob/widerobot_ch.dmi'
 	R.hands.icon = 'icons/mob/screen1_robot_vr.dmi'
 	R.ui_style_vr = TRUE
 	R.pixel_x 	 = -16

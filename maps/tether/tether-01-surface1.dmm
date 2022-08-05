@@ -2885,7 +2885,8 @@
 /obj/structure/disposalpipe/trunk{
 	dir = 4
 	},
-/obj/machinery/disposal/wall{
+/obj/machinery/disposal/wall/cleaner{
+	desc = "Automatically cleans and transports items to the local auto-resleeving facilities.";
 	dir = 8;
 	name = "auto-resleeving equipment deposit"
 	},
@@ -7794,6 +7795,10 @@
 	pixel_x = 32
 	},
 /obj/structure/table/standard,
+<<<<<<< HEAD
+=======
+/obj/random/paicard,
+>>>>>>> 1df6e69b74... Merge pull request #13038 from Very-Soft/teppipai
 /turf/simulated/floor/tiled,
 /area/storage/primary)
 "amW" = (
@@ -23015,8 +23020,8 @@
 /area/crew_quarters/sleep/Dorm_8)
 "aLU" = (
 /obj/structure/table/woodentable,
-/obj/item/weapon/storage/box/donkpockets,
 /obj/machinery/atmospherics/unary/vent_pump/on,
+/obj/random/donkpocketbox,
 /turf/simulated/floor/wood,
 /area/crew_quarters/sleep/Dorm_8)
 "aLV" = (
@@ -24301,8 +24306,8 @@
 /area/crew_quarters/sleep/Dorm_6)
 "aOs" = (
 /obj/structure/table/woodentable,
-/obj/item/weapon/storage/box/donkpockets,
 /obj/machinery/atmospherics/unary/vent_pump/on,
+/obj/random/donkpocketbox,
 /turf/simulated/floor/wood,
 /area/crew_quarters/sleep/Dorm_6)
 "aOt" = (
@@ -25447,12 +25452,12 @@
 /area/crew_quarters/sleep/Dorm_4)
 "aQk" = (
 /obj/structure/table/woodentable,
-/obj/item/weapon/storage/box/donkpockets,
 /obj/machinery/atmospherics/unary/vent_pump/on,
 /obj/machinery/light_switch{
 	name = "light switch ";
 	pixel_y = 26
 	},
+/obj/random/donkpocketbox,
 /turf/simulated/floor/wood,
 /area/crew_quarters/sleep/Dorm_4)
 "aQl" = (
@@ -26603,12 +26608,12 @@
 /area/crew_quarters/sleep/Dorm_2)
 "aSs" = (
 /obj/structure/table/woodentable,
-/obj/item/weapon/storage/box/donkpockets,
 /obj/machinery/atmospherics/unary/vent_pump/on,
 /obj/machinery/light_switch{
 	name = "light switch ";
 	pixel_y = 26
 	},
+/obj/random/donkpocketbox,
 /turf/simulated/floor/wood,
 /area/crew_quarters/sleep/Dorm_2)
 "aSt" = (
@@ -27545,6 +27550,10 @@
 /obj/effect/floor_decal/corner/blue/border{
 	dir = 4
 	},
+/obj/machinery/disposal/wall/cleaner{
+	dir = 8
+	},
+/obj/structure/disposalpipe/trunk,
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_lodging)
 "aUm" = (
@@ -27661,6 +27670,24 @@
 /obj/machinery/atmospherics/pipe/manifold/hidden/scrubbers{
 	dir = 1
 	},
+<<<<<<< HEAD
+=======
+/obj/effect/floor_decal/corner/grey{
+	dir = 5
+	},
+/obj/effect/floor_decal/corner/grey{
+	dir = 10
+	},
+/obj/structure/cable/orange{
+	d1 = 2;
+	d2 = 8;
+	icon_state = "2-8"
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 2;
+	icon_state = "pipe-c"
+	},
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aUt" = (
@@ -27686,6 +27713,21 @@
 /obj/machinery/washing_machine,
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+<<<<<<< HEAD
+=======
+/obj/effect/floor_decal/corner/grey{
+	dir = 5
+	},
+/obj/effect/floor_decal/corner/grey{
+	dir = 10
+	},
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aUv" = (
@@ -27865,6 +27907,11 @@
 /obj/effect/floor_decal/corner/white/bordercorner2{
 	dir = 5
 	},
+/obj/structure/disposalpipe/tagger{
+	dir = 2;
+	name = "package tagger - Resleeving";
+	sort_tag = "Resleeving"
+	},
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_lodging)
 "aUP" = (
@@ -27995,7 +28042,9 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
-/obj/structure/disposalpipe/segment,
+/obj/structure/disposalpipe/junction{
+	dir = 1
+	},
 /obj/effect/floor_decal/borderfloor/corner2{
 	dir = 10
 	},
@@ -28015,6 +28064,10 @@
 	dir = 9
 	},
 /obj/effect/landmark/vines,
+/obj/structure/disposalpipe/segment{
+	dir = 8;
+	icon_state = "pipe-c"
+	},
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_lodging)
 "aVd" = (
@@ -28321,9 +28374,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
-/obj/structure/disposalpipe/segment{
-	dir = 2;
-	icon_state = "pipe-c"
+/obj/structure/disposalpipe/junction{
+	dir = 8;
+	icon_state = "pipe-j2"
 	},
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
@@ -28353,7 +28406,13 @@
 /obj/effect/floor_decal/corner/grey/border{
 	dir = 4
 	},
+<<<<<<< HEAD
 >>>>>>> d6307e55b9... Merge pull request #9465 from KillianKirilenko/kk-misc2
+=======
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aVB" = (
@@ -28368,6 +28427,18 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/supply{
 	dir = 4
 	},
+<<<<<<< HEAD
+=======
+/obj/effect/floor_decal/corner/grey{
+	dir = 5
+	},
+/obj/effect/floor_decal/corner/grey{
+	dir = 10
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aVC" = (
@@ -28584,6 +28655,15 @@
 "aVP" = (
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
 /obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+<<<<<<< HEAD
+=======
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aVQ" = (
@@ -29102,6 +29182,10 @@
 	dir = 8
 	},
 /obj/structure/table/standard,
+<<<<<<< HEAD
+=======
+/obj/random/paicard,
+>>>>>>> 1df6e69b74... Merge pull request #13038 from Very-Soft/teppipai
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aWW" = (
@@ -29170,6 +29254,20 @@
 /obj/effect/floor_decal/steeldecal/steel_decals3{
 	dir = 9
 	},
+<<<<<<< HEAD
+=======
+/obj/structure/cable/orange{
+	d1 = 2;
+	d2 = 4;
+	icon_state = "2-4"
+	},
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "aXa" = (
@@ -31159,6 +31257,15 @@
 	dir = 1
 	},
 /obj/effect/floor_decal/steeldecal/steel_decals5,
+<<<<<<< HEAD
+=======
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "bcl" = (
@@ -31302,6 +31409,15 @@
 /obj/effect/floor_decal/steeldecal/steel_decals3{
 	dir = 10
 	},
+<<<<<<< HEAD
+=======
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 "bcG" = (
@@ -32531,7 +32647,6 @@
 /area/tether/surfacebase/security/brig)
 "dlB" = (
 /obj/structure/table/steel,
-/obj/item/weapon/storage/box/donkpockets,
 /obj/effect/floor_decal/corner/lightorange{
 	dir = 6
 	},
@@ -32541,6 +32656,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/on{
 	dir = 8
 	},
+/obj/random/donkpocketbox,
 /turf/simulated/floor/tiled,
 /area/tether/surfacebase/security/brig)
 "doa" = (
@@ -33516,6 +33632,21 @@
 	},
 /turf/simulated/floor/tiled,
 /area/rnd/hallway)
+<<<<<<< HEAD
+=======
+"gzO" = (
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 4;
+	icon_state = "1-4"
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 1;
+	icon_state = "pipe-c"
+	},
+/turf/simulated/floor/tiled,
+/area/crew_quarters/visitor_laundry)
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 "gAn" = (
 /obj/structure/cable/green{
 	d1 = 1;
@@ -33907,6 +34038,21 @@
 	},
 /turf/simulated/floor/plating,
 /area/maintenance/lower/mining_eva)
+<<<<<<< HEAD
+=======
+"hTk" = (
+/obj/structure/table/standard{
+	name = "plastic table frame"
+	},
+/obj/structure/cable/orange{
+	d1 = 4;
+	d2 = 8;
+	icon_state = "4-8"
+	},
+/obj/random/paicard,
+/turf/simulated/floor/tiled,
+/area/crew_quarters/locker)
+>>>>>>> 1df6e69b74... Merge pull request #13038 from Very-Soft/teppipai
 "hTw" = (
 /obj/structure/cable/green{
 	d1 = 1;
@@ -34057,6 +34203,15 @@
 /obj/effect/floor_decal/corner/grey/border{
 	dir = 1
 	},
+<<<<<<< HEAD
+=======
+/obj/structure/cable/orange{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
+	},
+/obj/structure/disposalpipe/segment,
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 /turf/simulated/floor/tiled,
 /area/crew_quarters/visitor_laundry)
 >>>>>>> 7c76d267c9... Merge pull request #9645 from SweetBlueSylveon/The-Clime-Offices
@@ -34678,6 +34833,22 @@
 /obj/structure/railing,
 /turf/simulated/floor/plating,
 /area/maintenance/lowmedbaymaint)
+<<<<<<< HEAD
+=======
+"ktr" = (
+/obj/structure/cable/orange{
+	d1 = 2;
+	d2 = 8;
+	icon_state = "2-8"
+	},
+/obj/structure/disposalpipe/tagger{
+	dir = 4;
+	name = "package tagger - Resleeving";
+	sort_tag = "Resleeving"
+	},
+/turf/simulated/floor/tiled,
+/area/crew_quarters/visitor_laundry)
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 "kuB" = (
 /obj/effect/floor_decal/industrial/warning,
 /obj/machinery/atmospherics/pipe/simple/hidden/supply,
@@ -38919,6 +39090,33 @@
 	},
 /turf/simulated/floor/tiled,
 /area/tether/surfacebase/surface_one_hall)
+<<<<<<< HEAD
+=======
+"wxk" = (
+/obj/machinery/atmospherics/binary/passive_gate/on{
+	dir = 4
+	},
+/obj/machinery/firealarm{
+	dir = 1
+	},
+/turf/simulated/floor/plating,
+/area/maintenance/engineering/atmos/airlock/gas)
+"wxO" = (
+/obj/effect/floor_decal/borderfloor{
+	dir = 4
+	},
+/obj/effect/floor_decal/corner/grey/border{
+	dir = 4
+	},
+/obj/machinery/disposal/wall/cleaner{
+	dir = 8
+	},
+/obj/structure/disposalpipe/trunk{
+	dir = 8
+	},
+/turf/simulated/floor/tiled,
+/area/crew_quarters/visitor_laundry)
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 "wzA" = (
 /obj/structure/catwalk,
 /obj/machinery/alarm{
@@ -62857,7 +63055,16 @@ aVB
 aVf
 cKo
 aUP
+<<<<<<< HEAD
 aWY
+=======
+aXb
+aUm
+bcH
+wxO
+bcN
+aUm
+>>>>>>> 76e61a485c... Merge pull request #12764 from Very-Soft/timeforblue
 aUm
 bcE
 aUP
