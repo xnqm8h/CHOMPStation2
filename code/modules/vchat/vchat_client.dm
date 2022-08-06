@@ -11,7 +11,8 @@ GLOBAL_LIST_INIT(vchatFiles, list(
 ))
 
 // The to_chat() macro calls this proc
-/proc/__to_chat(var/target, var/message)
+/proc/__to_chat(var/target, var/message, var/text_style)
+	if (text_style) message = "<span class='[text_style]'>[message]</span>"
 	// First do logging in database
 	if(isclient(target))
 		var/client/C = target
