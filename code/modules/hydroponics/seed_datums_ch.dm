@@ -153,7 +153,7 @@
 	set_trait(TRAIT_PRODUCTION,5)
 	set_trait(TRAIT_YIELD,6)
 	set_trait(TRAIT_POTENCY,20)
-	set_trait(TRAIT_PRODUCT_ICON,"tea")
+	set_trait(TRAIT_PRODUCT_ICON,"leafy")
 	set_trait(TRAIT_PRODUCT_COLOUR,"#b7e496")
 	set_trait(TRAIT_PLANT_COLOUR,"#b7e496")
 	set_trait(TRAIT_PLANT_ICON,"bush4")
