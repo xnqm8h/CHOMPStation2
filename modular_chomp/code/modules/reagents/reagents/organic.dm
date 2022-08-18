@@ -1,7 +1,7 @@
 /datum/reagent/sap_strobac
-	name = "Sap"
+	name = "Strobac Serrata Sap"
 	id = "sap_strobac"
-	description = "A viscious liquid."
+	description = "A viscious sap from the Strobac family of plants."
 	taste_description = "sugar"
 	taste_mult = 2
 	reagent_state = LIQUID
@@ -16,4 +16,4 @@
 		? (1 * M.species.chem_strength_heal)\
 		: (1 * M.species.chem_strength_heal) * 0.75
 	if(alien != IS_DIONA)
-		M.heal_organ_damage(4 * removed * chem_effective, 0)
+		M.heal_organ_damage(1 * removed * chem_effective, 1 * removed * chem_effective)

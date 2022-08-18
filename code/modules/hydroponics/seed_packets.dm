@@ -355,5 +355,11 @@ GLOBAL_LIST_BOILERPLATE(all_seed_packs, /obj/item/seeds)
 /obj/item/seeds/wurmwoad
 	seed_type = "wurmwoad"
 
-/obj/item/seeds/strobac
-	seed_type = "strobac"
+/obj/item/seeds/strobac_serrata
+	seed_type = "strobac_serrata"
+
+/obj/item/seeds/strobac_uro
+	seed_type = "strobac_uro"
+
+/obj/item/seeds/strobac_maculata
+	seed_type = "strobac_maculata"

@@ -111,4 +111,4 @@
 		/obj/item/seeds/megashroom = 3,
 		/obj/item/seeds/lustflower = 2,
 		/obj/item/seeds/pitcherseed = 3,
-		/obj/item/seeds/strobac = 3) // CHOMPEdit - Adds new chompstation seed to xenobot
+		/obj/item/seeds/strobac_serrata = 3) // CHOMPEdit - Adds new chompstation seed to xenobot
