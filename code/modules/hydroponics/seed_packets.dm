@@ -363,3 +363,45 @@ GLOBAL_LIST_BOILERPLATE(all_seed_packs, /obj/item/seeds)
 
 /obj/item/seeds/strobac_maculata
 	seed_type = "strobac_maculata"
+
+/obj/item/seeds/strobac_tinctoia
+	seed_type = "strobac_tinctoia"
+
+/obj/item/seeds/strobac_tinctoia_sporae
+	seed_type = "strobac_tinctoia_sporae"
+
+/obj/item/seeds/strobac_tinctoria_villosa
+	seed_type = "strobac_tinctoia_villosa"
+
+/obj/item/seeds/strobac_vulgarus
+	seed_type = "strobac_vulgarus"
+
+/obj/item/seeds/strobac_villosa_parvus
+	seed_type = "strobac_villosa_parvus"
+
+/obj/item/seeds/strobac_maculata_spica
+	seed_type = "strobac_maculata_spica"
+
+/obj/item/seeds/strobac_maculata_communis
+	seed_type = "strobac_maculata_communis"
+
+/obj/item/seeds/strobac_communis
+	seed_type = "strobac_communis"
+
+/obj/item/seeds/strobac_maculata_vorare
+	seed_type = "strobac_maculata_vorare"
+
+/obj/item/seeds/strobac_uro_magnus
+	seed_type = "strobac_uro_magnus"
+
+/obj/item/seeds/strobac_fulmen
+	seed_type = "strobac_fulmen"
+
+/obj/item/seeds/strobac_uro_altilium
+	seed_type = "strobac_uro_altilium"
+
+/obj/item/seeds/strobac_fulmen_magnus
+	seed_type = "strobac_fulmen_magnus"
+
+/obj/item/seeds/strobac_sicco
+	seed_type = "strobac_sicco"
