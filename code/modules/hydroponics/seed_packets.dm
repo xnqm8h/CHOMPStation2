@@ -364,10 +364,10 @@ GLOBAL_LIST_BOILERPLATE(all_seed_packs, /obj/item/seeds)
 /obj/item/seeds/strobac_maculata
 	seed_type = "strobac_maculata"
 
-/obj/item/seeds/strobac_tinctoia
+/obj/item/seeds/strobac_tinctoria
 	seed_type = "strobac_tinctoia"
 
-/obj/item/seeds/strobac_tinctoia_sporae
+/obj/item/seeds/strobac_tinctoria_sporae
 	seed_type = "strobac_tinctoia_sporae"
 
 /obj/item/seeds/strobac_tinctoria_villosa

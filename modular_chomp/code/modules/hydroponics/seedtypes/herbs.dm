@@ -15,7 +15,6 @@
 	set_trait(TRAIT_PRODUCT_ICON,"leafy")
 	set_trait(TRAIT_PRODUCT_COLOUR,"#6d9c78")
 	set_trait(TRAIT_PLANT_ICON,"ambrosia")
-
 /datum/seed/herb/strobac_serrata
 	name = "strobac_serrata"
 	seed_name = "strobac serrata"
@@ -24,7 +23,7 @@
 	mutants = list("strobac_maculata", "strobac_tinctoria", "strobac_uro")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_serrata/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -41,9 +40,9 @@
 	display_name = "strobac uro"
 	kitchen_tag = "herb"
 	mutants = list("strobac_uro_magnus", "strobac_fulmen")
-	chems = list("sap_strobac" = list(2,15), "honey" = list(1, 5), "nutriment" = list(2,10))
+	chems = list("sap_strobac_uro" = list(2,15), "honey" = list(1, 5), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_uro/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -60,9 +59,9 @@
 	display_name = "strobac tinctoria"
 	kitchen_tag = "herb"
 	mutants = list("strobac_vulgarus", "strobac_tinctoria_sporae")
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_tinctoria" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_tinctoria/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -79,9 +78,9 @@
 	display_name = "strobac maculata"
 	kitchen_tag = "herb"
 	mutants = list("strobac_communis", "strobac_maculata_spica")
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_maculata" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_maculata/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -98,9 +97,9 @@
 	display_name = "strobac communis"
 	kitchen_tag = "herb"
 	mutants = list("strobac_maculata_communis")
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_communis" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_communis/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -117,18 +116,21 @@
 	display_name = "strobac maculata spica"
 	kitchen_tag = "herb"
 	mutants = list("strobac_maculata_communis")
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_maculata_spica" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_maculata_spica/New()
 	..()
-	set_trait(TRAIT_HARVEST_REPEAT,1)
-	set_trait(TRAIT_MATURATION,4)
-	set_trait(TRAIT_PRODUCTION,4)
-	set_trait(TRAIT_YIELD,3)
-	set_trait(TRAIT_POTENCY,5)
-	set_trait(TRAIT_PRODUCT_ICON,"leafy")
+	set_trait(TRAIT_HARVEST_REPEAT,          1)
+	set_trait(TRAIT_MATURATION,              4)
+	set_trait(TRAIT_PRODUCTION,              4)
+	set_trait(TRAIT_STINGS,                  1) // Spines to reinforce glove usage.
+	set_trait(TRAIT_SPREAD,                  1) // Creepers to spread out for pokes.
+	set_trait(TRAIT_CARNIVOROUS,             1) // It's a hungry plant.
+	set_trait(TRAIT_YIELD,                   3)
+	set_trait(TRAIT_POTENCY,                 5)
+	set_trait(TRAIT_PRODUCT_ICON,      "leafy")
 	set_trait(TRAIT_PRODUCT_COLOUR,"#91e3d4")
-	set_trait(TRAIT_PLANT_ICON,"ambrosia")
+	set_trait(TRAIT_PLANT_ICON,     "ambrosia")
 
 /datum/seed/herb/strobac_maculata_communis
 	name = "strobac_maculata_communis"
@@ -136,36 +138,43 @@
 	display_name = "strobac maculata communis"
 	kitchen_tag = "herb"
 	mutants = list("strobac_maculata_vorare")
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_maculata_communis" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_maculata_communis/New()
 	..()
-	set_trait(TRAIT_HARVEST_REPEAT,1)
-	set_trait(TRAIT_MATURATION,4)
-	set_trait(TRAIT_PRODUCTION,4)
-	set_trait(TRAIT_YIELD,3)
-	set_trait(TRAIT_POTENCY,5)
-	set_trait(TRAIT_PRODUCT_ICON,"leafy")
+	set_trait(TRAIT_HARVEST_REPEAT,          1)
+	set_trait(TRAIT_MATURATION,              4)
+	set_trait(TRAIT_PRODUCTION,              4)
+	set_trait(TRAIT_STINGS,                  1)
+	set_trait(TRAIT_SPREAD,                  2) // Vine mutation but it's not hungry yet.
+	set_trait(TRAIT_CARNIVOROUS,             1)
+	set_trait(TRAIT_YIELD,                   3)
+	set_trait(TRAIT_POTENCY,                50) // Needs to be more potent so it can spread easier.
+	set_trait(TRAIT_PRODUCT_ICON,      "leafy")
 	set_trait(TRAIT_PRODUCT_COLOUR,"#91e3d4")
-	set_trait(TRAIT_PLANT_ICON,"ambrosia")
+	set_trait(TRAIT_PLANT_ICON,     "ambrosia")
 
 /datum/seed/herb/strobac_maculata_vorare
 	name = "strobac_maculata_vorare"
 	seed_name = "strobac maculata vorare"
 	display_name = "strobac maculata vorare"
 	kitchen_tag = "herb"
-	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
+	chems = list("sap_strobac_maculata_vorare" = list(2,15), "nutriment" = list(2,10),)
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_maculata_vorare/New()
 	..()
-	set_trait(TRAIT_HARVEST_REPEAT,1)
-	set_trait(TRAIT_MATURATION,4)
-	set_trait(TRAIT_PRODUCTION,4)
-	set_trait(TRAIT_YIELD,3)
-	set_trait(TRAIT_POTENCY,5)
-	set_trait(TRAIT_PRODUCT_ICON,"leafy")
-	set_trait(TRAIT_PRODUCT_COLOUR,"#91e3d4")
-	set_trait(TRAIT_PLANT_ICON,"ambrosia")
+	set_trait(TRAIT_HARVEST_REPEAT,          1)
+	set_trait(TRAIT_MATURATION,              4)
+	set_trait(TRAIT_PRODUCTION,              4)
+	set_trait(TRAIT_STINGS,                  1)
+	set_trait(TRAIT_SPREAD,                  2)
+	set_trait(TRAIT_CARNIVOROUS,             2) // Now it will try eating living critters.
+	set_trait(TRAIT_YIELD,                   3)
+	set_trait(TRAIT_POTENCY,                90) // It's gotta wiggle around.
+	set_trait(TRAIT_PRODUCT_ICON,      "leafy")
+	set_trait(TRAIT_PRODUCT_COLOUR,"#f16338")
+	set_trait(TRAIT_PLANT_COLOUR,  "#f4a227")
+	set_trait(TRAIT_PLANT_ICON,     "ambrosia")
 
 /datum/seed/herb/strobac_vulgarus
 	name = "strobac_vulgarus"
@@ -175,7 +184,7 @@
 	mutants = list("strobac_villosa_parvus", "ambrosiavulgaris")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_vulgarus/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -194,7 +203,7 @@
 	mutants = list("strobac_tinctoria_villosa")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_villosa_parvus/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -213,7 +222,7 @@
 	mutants = list("strobac_tinctoria_villosa")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_tinctoria_sporae/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -232,7 +241,7 @@
 	kitchen_tag = "herb"
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_tinctoria_villosa/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -251,7 +260,7 @@
 	mutants = list("strobac_uro_altilium", "strobac_fulmen_magnus")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_uro_magnus/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -270,7 +279,7 @@
 	mutants = list("strobac_sicco", "strobac_fulmen_magnus")
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_fulmen/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -288,7 +297,7 @@
 	kitchen_tag = "herb"
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_uro_altilium/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -306,7 +315,7 @@
 	kitchen_tag = "herb"
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_fulmen_magnus/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
@@ -324,7 +333,7 @@
 	kitchen_tag = "herb"
 	chems = list("sap_strobac" = list(2,15), "nutriment" = list(2,10))
 
-/datum/seed/herb/New()
+/datum/seed/herb/strobac_sicco/New()
 	..()
 	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,4)
