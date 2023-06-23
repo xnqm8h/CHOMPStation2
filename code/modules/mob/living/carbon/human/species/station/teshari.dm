@@ -19,14 +19,17 @@
 
 	health_hud_intensity = 3
 
-	male_cough_sounds = list('sound/effects/mob_effects/tesharicougha.ogg','sound/effects/mob_effects/tesharicoughb.ogg')
-	female_cough_sounds = list('sound/effects/mob_effects/tesharicougha.ogg','sound/effects/mob_effects/tesharicoughb.ogg')
-	male_sneeze_sound = 'sound/effects/mob_effects/tesharisneeze.ogg'
-	female_sneeze_sound = 'sound/effects/mob_effects/tesharisneeze.ogg'
+	// CHOMPEdit Start: Species Sounds
+	species_sounds = "Teshari"
+	// male_cough_sounds = list('sound/effects/mob_effects/tesharicougha.ogg','sound/effects/mob_effects/tesharicoughb.ogg')
+	// female_cough_sounds = list('sound/effects/mob_effects/tesharicougha.ogg','sound/effects/mob_effects/tesharicoughb.ogg')
+	// male_sneeze_sound = 'sound/effects/mob_effects/tesharisneeze.ogg'
+	// female_sneeze_sound = 'sound/effects/mob_effects/tesharisneeze.ogg'
 
 	//CHOMPStation Add. Y'know I should probably just put this upstream.
-	male_scream_sound = 'sound/effects/mob_effects/teshariscream.ogg'
-	female_scream_sound = 'sound/effects/mob_effects/teshariscream.ogg'
+	// male_scream_sound = 'sound/effects/mob_effects/teshariscream.ogg'
+	// female_scream_sound = 'sound/effects/mob_effects/teshariscream.ogg'
+	center_offset = 0 //CHOMPEdit
 	//CHOMPStation Add End
 
 	blood_color = "#D514F7"
@@ -80,7 +83,7 @@
 	breath_cold_level_2 = 100	//Default 180
 	breath_cold_level_3 = 60	//Default 100
 
-	heat_level_1 = 320	//Default 360
+	heat_level_1 = 330	//Default 360
 	heat_level_2 = 370	//Default 400
 	heat_level_3 = 600	//Default 1000
 

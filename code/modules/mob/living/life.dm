@@ -74,6 +74,8 @@
 
 	handle_tf_holder()	//VOREStation Addition
 
+	handle_vr_derez() // CHOMPedit
+
 /mob/living/proc/handle_breathing()
 	return
 
@@ -238,6 +240,9 @@
 	return
 
 /mob/living/proc/handle_light()
+	if(glow_override)
+		return FALSE
+
 	if(instability >= TECHNOMANCER_INSTABILITY_MIN_GLOW)
 		var/distance = round(sqrt(instability / 2))
 		if(distance)

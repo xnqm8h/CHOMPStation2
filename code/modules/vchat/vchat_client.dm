@@ -5,9 +5,9 @@ GLOBAL_LIST_INIT(vchatFiles, list(
 	"code/modules/vchat/css/vchat-font-embedded.css",
 	"code/modules/vchat/css/semantic.min.css",
 	"code/modules/vchat/css/ss13styles.css",
-	"code/modules/vchat/js/polyfills.js",
+	"code/modules/vchat/js/polyfills.min.js",
 	"code/modules/vchat/js/vue.min.js",
-	"code/modules/vchat/js/vchat.js"
+	"code/modules/vchat/js/vchat.min.js"
 ))
 
 // The to_chat() macro calls this proc
@@ -310,7 +310,7 @@ GLOBAL_LIST_EMPTY(bicon_cache) // Cache of the <img> tag results, not the icons
 		base64 = icon2base64(A.examine_icon(), key)
 		GLOB.bicon_cache[key] = base64
 		if(changes_often)
-			addtimer(CALLBACK(GLOBAL_PROC, .proc/expire_bicon_cache, key), 50 SECONDS, TIMER_UNIQUE)
+			addtimer(CALLBACK(GLOBAL_PROC, PROC_REF(expire_bicon_cache), key), 50 SECONDS, TIMER_UNIQUE)
 
 	// May add a class to the img tag created by bicon
 	if(use_class)

@@ -252,7 +252,7 @@ Implant Specifics:<BR>"}
 
 	if(istype(imp_in, /mob/))
 		var/mob/T = imp_in
-		message_admins("Explosive implant triggered in [T] ([T.key]). (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[T.x];Y=[T.y];Z=[T.z]'>JMP</a>) ")
+		message_admins("Explosive implant triggered in [T] ([T.key]). (<A HREF='?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[T.x];Y=[T.y];Z=[T.z]'>JMP</a>) ")
 		log_game("Explosive implant triggered in [T] ([T.key]).")
 
 		if(ishuman(imp_in))
@@ -561,8 +561,8 @@ the implant may become unstable and either pre-maturely inject the subject or si
 	if (malfunction)		//so I'm just going to add a meltdown chance here
 		return
 	malfunction = MALFUNCTION_TEMPORARY
-
-	activate("emp")	//let's shout that this dude is dead
+	if(prob(40)) //CHOMPEDIT: Make the malfunction a probability because annoying
+		activate("emp")	//let's shout that this dude is dead
 	if(severity == 1)
 		if(prob(40))	//small chance of obvious meltdown
 			meltdown()

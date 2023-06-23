@@ -53,7 +53,7 @@
 
 /obj/structure/closet/body_bag/attackby(var/obj/item/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/pen))
-		var/t = tgui_input_text(user, "What would you like the label to be?", text("[]", src.name), null)
+		var/t = tgui_input_text(user, "What would you like the label to be?", text("[]", src.name), null, MAX_NAME_LEN	)
 		if (user.get_active_hand() != W)
 			return
 		if (!in_range(src, user) && src.loc != user)
@@ -128,7 +128,7 @@
 /obj/item/bodybag/cryobag
 	name = "stasis bag"
 	desc = "A non-reusable plastic bag designed to slow down bodily functions such as circulation and breathing, \
-	especially useful if short on time or in a hostile enviroment."
+	especially useful if short on time or in a hostile environment."		// CHOMPEDIT : purdev (spelling fix)
 	icon = 'icons/obj/closets/cryobag.dmi'
 	icon_state = "bodybag_folded"
 	item_state = "bodybag_cryo_folded"

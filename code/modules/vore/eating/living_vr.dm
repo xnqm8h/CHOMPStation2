@@ -36,10 +36,12 @@
 	var/stumble_vore = TRUE				//Enabled by default since you have to enable drop pred/prey to do this anyway
 	var/slip_vore = TRUE				//Enabled by default since you have to enable drop pred/prey to do this anyway
 	var/drop_vore = TRUE				//Enabled by default since you have to enable drop pred/prey to do this anyway
+	var/throw_vore = TRUE				//Enabled by default since you have to enable drop pred/prey to do this anyway
 	var/can_be_drop_prey = FALSE
 	var/can_be_drop_pred = FALSE
 	var/allow_spontaneous_tf = FALSE	// Obviously.
 	var/next_preyloop					// For Fancy sound internal loop
+	var/stuffing_feeder = FALSE			// Can feed foods to others whole, like trash eater can eat them on their own.
 	var/adminbus_trash = FALSE			// For abusing trash eater for event shenanigans.
 	var/adminbus_eat_minerals = FALSE	// This creature subsists on a diet of pure adminium.
 	var/vis_height = 32					// Sprite height used for resize features.
@@ -48,6 +50,10 @@
 	var/latejoin_prey = FALSE			//CHOMPedit: If enabled, latejoiners can spawn ontop of and instantly eat the victim
 	var/noisy_full = FALSE				//CHOMPedit: Enables belching when a mob has overeaten
 	var/selective_preference = DM_DEFAULT	// Preference for selective bellymode
+	var/appendage_color = "#e03997" //Default pink. Used for the 'long_vore' trait.
+	var/appendage_alt_setting = FALSE	// Dictates if 'long_vore' user pulls prey to them or not. 1 = user thrown towards target.
+	var/eating_privacy_global = FALSE //Makes eating attempt/success messages only reach for subtle range if true, overwritten by belly-specific var
+	var/digestion_in_progress = FALSE	// CHOMPEdit: Gradual corpse gurgles
 	var/regen_sounds = list(
 		'sound/effects/mob_effects/xenochimera/regen_1.ogg',
 		'sound/effects/mob_effects/xenochimera/regen_2.ogg',
@@ -117,6 +123,10 @@
 		B.name = "Stomach"
 		B.desc = "It appears to be rather warm and wet. Makes sense, considering it's inside \the [name]."
 		B.can_taste = TRUE
+		if(ishuman(src))
+			var/mob/living/carbon/human/H = src
+			if(istype(H.species,/datum/species/monkey))
+				allow_spontaneous_tf = TRUE
 		return TRUE
 
 //
@@ -276,7 +286,9 @@
 	P.pickup_pref = src.pickup_pref
 	P.drop_vore = src.drop_vore
 	P.slip_vore = src.slip_vore
+	P.throw_vore = src.throw_vore
 	P.stumble_vore = src.stumble_vore
+	P.eating_privacy_global = src.eating_privacy_global
 
 	P.nutrition_message_visible = src.nutrition_message_visible
 	P.nutrition_messages = src.nutrition_messages
@@ -289,6 +301,8 @@
 	P.receive_reagents = src.receive_reagents
 	P.give_reagents = src.give_reagents
 	P.autotransferable = src.autotransferable
+	P.vore_sprite_color = src.vore_sprite_color
+	P.vore_sprite_multiply = src.vore_sprite_multiply
 
 	var/list/serialized = list()
 	for(var/obj/belly/B as anything in src.vore_organs)
@@ -329,7 +343,9 @@
 	pickup_pref = P.pickup_pref
 	drop_vore = P.drop_vore
 	slip_vore = P.slip_vore
+	throw_vore = P.throw_vore
 	stumble_vore = P.stumble_vore
+	eating_privacy_global = P.eating_privacy_global
 
 	nutrition_message_visible = P.nutrition_message_visible
 	nutrition_messages = P.nutrition_messages
@@ -342,6 +358,8 @@
 	receive_reagents = P.receive_reagents
 	give_reagents = P.give_reagents
 	autotransferable = P.autotransferable
+	vore_sprite_color = P.vore_sprite_color
+	vore_sprite_multiply = P.vore_sprite_multiply
 
 	if(bellies)
 		release_vore_contents(silent = TRUE)
@@ -408,7 +426,7 @@
 	if(!istype(tasted))
 		return
 
-	if(!checkClickCooldown() || incapacitated(INCAPACITATION_ALL))
+	if(!checkClickCooldown() || incapacitated(INCAPACITATION_KNOCKOUT)) //CHOMPEdit
 		return
 
 	setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
@@ -448,7 +466,7 @@
 
 	if(!istype(smelled))
 		return
-	if(!checkClickCooldown() || incapacitated(INCAPACITATION_ALL))
+	if(!checkClickCooldown() || incapacitated(INCAPACITATION_KNOCKOUT)) //CHOMPEdit
 		return
 
 	setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
@@ -496,9 +514,10 @@
 		muffled = FALSE		//Removes Muffling
 		forceMove(get_turf(src)) //Just move me up to the turf, let's not cascade through bellies, there's been a problem, let's just leave.
 		for(var/mob/living/simple_mob/SA in range(10))
-			SA.prey_excludes[src] = world.time
-		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(B.owner)] ([B.owner ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[B.owner.x];Y=[B.owner.y];Z=[B.owner.z]'>JMP</a>" : "null"])")
+			LAZYSET(SA.prey_excludes, src, world.time)
+		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(B.owner)] ([B.owner ? "<a href='?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[B.owner.x];Y=[B.owner.y];Z=[B.owner.z]'>JMP</a>" : "null"])")
 
+		B.owner.update_fullness() //CHOMPEdit - This is run whenever a belly's contents are changed.
 		if(!ishuman(B.owner))
 			B.owner.update_icons()
 
@@ -511,14 +530,14 @@
 		if(confirm != "Okay" || loc != belly)
 			return
 		//Actual escaping
-		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(pred)] (BORG) ([pred ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[pred.x];Y=[pred.y];Z=[pred.z]'>JMP</a>" : "null"])")
+		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(pred)] (BORG) ([pred ? "<a href='?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[pred.x];Y=[pred.y];Z=[pred.z]'>JMP</a>" : "null"])")
 		belly.go_out(src) //Just force-ejects from the borg as if they'd clicked the eject button.
 
 	//You're in an AI hologram!
 	else if(istype(loc, /obj/effect/overlay/aiholo))
 		var/obj/effect/overlay/aiholo/holo = loc
 		holo.drop_prey() //Easiest way
-		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(holo.master)] (AI HOLO) ([holo ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[holo.x];Y=[holo.y];Z=[holo.z]'>JMP</a>" : "null"])")
+		log_and_message_admins("[key_name(src)] used the OOC escape button to get out of [key_name(holo.master)] (AI HOLO) ([holo ? "<a href='?_src_=holder;[HrefToken()];adminplayerobservecoodjump=1;X=[holo.x];Y=[holo.y];Z=[holo.z]'>JMP</a>" : "null"])")
 
 	//You're in a capture crystal! ((It's not vore but close enough!))
 	else if(iscapturecrystal(loc))
@@ -545,6 +564,17 @@
 	else if(tf_mob_holder)
 		log_and_message_admins("[key_name(src)] used the OOC escape button to revert back to their original form from being TFed into another mob.")
 		revert_mob_tf()
+	//CHOMPEdit - petrification (again not vore but hey- ooc escape)
+	else if(istype(loc, /obj/structure/gargoyle) && loc:was_rayed)
+		var/obj/structure/gargoyle/G = loc
+		G.can_revert = TRUE
+		qdel(G)
+		log_and_message_admins("[key_name(src)] used the OOC escape button to revert back from being petrified.")
+	//CHOMPEdit - In-shoe OOC escape. Checking voices as precaution if something akin to obj TF or possession happens
+	else if(!istype(src, /mob/living/voice) && istype(src.loc, /obj/item/clothing/shoes))
+		var/obj/item/clothing/shoes/S = src.loc
+		forceMove(get_turf(src))
+		log_and_message_admins("[key_name(src)] used the OOC escape button to escape from of a pair of shoes. [ADMIN_FLW(src)] - Shoes [ADMIN_VV(S)]")
 	//Don't appear to be in a vore situation
 	else
 		to_chat(src,"<span class='alert'>You aren't inside anyone, though, is the thing.</span>")
@@ -552,6 +582,16 @@
 //
 // Eating procs depending on who clicked what
 //
+
+//CHOMPAdd Start
+/mob/living/proc/feedable_bellies()
+	var/list/bellies = list()
+	for(var/obj/belly/Y in src.vore_organs)
+		if(Y.is_feedable)
+			bellies += Y
+	return bellies
+//CHOMPAdd End
+
 /mob/living/proc/feed_grabbed_to_self(mob/living/user, mob/living/prey)
 	var/belly = user.vore_selected
 	return perform_the_nom(user, prey, user, belly)
@@ -559,17 +599,17 @@
 /mob/living/proc/eat_held_mob(mob/living/user, mob/living/prey, mob/living/pred)
 	var/belly
 	if(user != pred)
-		belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.vore_organs)
+		belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.feedable_bellies())	//CHOMPEdit
 	else
 		belly = pred.vore_selected
 	return perform_the_nom(user, prey, pred, belly)
 
 /mob/living/proc/feed_self_to_grabbed(mob/living/user, mob/living/pred)
-	var/belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.vore_organs)
+	var/belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.feedable_bellies())	//CHOMPEdit
 	return perform_the_nom(user, user, pred, belly)
 
 /mob/living/proc/feed_grabbed_to_other(mob/living/user, mob/living/prey, mob/living/pred)
-	var/belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.vore_organs)
+	var/belly = tgui_input_list(usr, "Choose Belly", "Belly Choice", pred.feedable_bellies())	//CHOMPEdit
 	return perform_the_nom(user, prey, pred, belly)
 
 //
@@ -598,6 +638,22 @@
 		to_chat(user, "<span class='notice'>They aren't able to be devoured.</span>")
 		log_and_message_admins("[key_name_admin(src)] attempted to devour [key_name_admin(prey)] against their prefs ([prey ? ADMIN_JMP(prey) : "null"])")
 		return FALSE
+	if(prey.absorbed || pred.absorbed)
+		to_chat(user, "<span class='warning'>They aren't aren't in a state to be devoured.</span>")
+		return FALSE
+
+	//Determining vore attempt privacy
+	var/message_range = world.view
+	if(!pred.is_slipping && !prey.is_slipping) //We only care about privacy preference if it's NOT a spontaneous vore.
+		switch(belly.eating_privacy_local) //if("loud") case not added, as it would not modify message_range
+			if("default")
+				if(pred.eating_privacy_global)
+					message_range = 1
+			if("subtle")
+				message_range = 1
+
+
+
 	// Slipnoms from chompstation downstream, credit to cadyn for the original PR.
 	// Prepare messages
 	if(prey.is_slipping)
@@ -614,7 +670,10 @@
 		success_msg = "<span class='warning'>[user] manages to make [pred] [lowertext(belly.vore_verb)] [prey] into their [lowertext(belly.name)]!</span>"
 
 	// Announce that we start the attempt!
-	user.visible_message(attempt_msg)
+
+
+	user.visible_message(attempt_msg, range = message_range)
+
 
 	// Now give the prey time to escape... return if they did
 	var/swallow_time
@@ -631,7 +690,7 @@
 		return FALSE // Prey escpaed (or user disabled) before timer expired.
 
 	// If we got this far, nom successful! Announce it!
-	user.visible_message(success_msg)
+	user.visible_message(success_msg, range = message_range)
 
 	// Actually shove prey into the belly.
 	if(istype(prey.loc, /obj/item/weapon/holder))
@@ -644,8 +703,8 @@
 		qdel(H)
 	else
 		belly.nom_mob(prey, user)
-	if(!ishuman(user))
-		user.update_icons()
+
+	user.updateicon()
 
 	// Inform Admins
 	if(pred == user)
@@ -709,6 +768,16 @@
     gas = list(
         "oxygen" = 100)
 
+/datum/gas_mixture/belly_air/nitrogen_breather
+    volume = 2500
+    temperature = 293.150
+    total_moles = 104
+
+/datum/gas_mixture/belly_air/nitrogen_breather/New()
+    . = ..()
+    gas = list(
+        "nitrogen" = 100)
+
 
 /mob/living/proc/feed_grabbed_to_self_falling_nom(var/mob/living/user, var/mob/living/prey)
 	var/belly = user.vore_selected
@@ -742,6 +811,9 @@
 /mob/living/proc/get_digestion_nutrition_modifier()
 	return 1
 
+/mob/living/proc/get_digestion_efficiency_modifier()
+	return 1
+
 /mob/living/proc/eat_trash()
 	set name = "Eat Trash"
 	set category = "Abilities"
@@ -767,7 +839,7 @@
 	if(istype(I, /obj/item/device/paicard))
 		var/obj/item/device/paicard/palcard = I
 		var/mob/living/silicon/pai/pocketpal = palcard.pai
-		if(!pocketpal.devourable)
+		if(pocketpal && (!pocketpal.devourable))
 			to_chat(src, "<span class='warning'>\The [pocketpal] doesn't allow you to eat it.</span>")
 			return
 
@@ -890,7 +962,7 @@
 		else
 			to_chat(src, "<span class='notice'>You can taste the flavor of garbage. Delicious.</span>")
 		return
-	to_chat(src, "<span class='notice'>This item is not appropriate for ethical consumption.</span>")
+	to_chat(src, "<span class='notice'>This snack is too powerful to go down that easily.</span>") //CHOMPEdit
 	return
 
 /mob/living/proc/eat_minerals() //Actual eating abstracted so the user isn't given a prompt due to an argument in this verb.
@@ -1020,12 +1092,28 @@
 	else //Not the droids we're looking for.
 		to_chat(src, "<span class='notice'>You pause for a moment to examine [I] and realize it's not even worth the energy to chew.</span>") //If it ain't ore or the type of sheets we can eat, bugger off!
 
+/mob/living/proc/toggle_stuffing_mode()
+	set name = "Toggle feeding mode"
+	set category = "Abilities"
+	set desc = "Switch whether you will try to feed other people food whole or normally, bite by bite."
+
+	stuffing_feeder = !stuffing_feeder
+	to_chat(src, "<span class='notice'>You will [stuffing_feeder ? "now" : "no longer"] try to feed food whole.</span>")
+
 /mob/living/proc/switch_scaling()
 	set name = "Switch scaling mode"
 	set category = "Preferences"
 	set desc = "Switch sharp/fuzzy scaling for current mob."
 	appearance_flags ^= PIXEL_SCALE
 	fuzzy = !fuzzy
+	update_transform() //CHOMPEdit
+
+/mob/living/proc/center_offset() //CHOMPAdd
+	set name = "Switch center offset mode"
+	set category = "Preferences"
+	set desc = "Switch sprite center offset to fix even/odd symmetry."
+	offset_override = !offset_override
+	update_transform()
 
 /mob/living/examine(mob/user, infix, suffix)
 	. = ..()
@@ -1066,10 +1154,12 @@
 	dispvoreprefs += "<b>Giving liquids:</b> [give_reagents ? "Enabled" : "Disabled"]<br>"	//CHOMPstation edit
 	dispvoreprefs += "<b>Drop Vore:</b> [drop_vore ? "Enabled" : "Disabled"]<br>"
 	dispvoreprefs += "<b>Slip Vore:</b> [slip_vore ? "Enabled" : "Disabled"]<br>"
+	dispvoreprefs += "<b>Throw vore:</b> [throw_vore ? "Enabled" : "Disabled"]<br>"
 	dispvoreprefs += "<b>Stumble Vore:</b> [stumble_vore ? "Enabled" : "Disabled"]<br>"
 	dispvoreprefs += "<b>Spontaneous transformation:</b> [allow_spontaneous_tf ? "Enabled" : "Disabled"]<br>"
 	dispvoreprefs += "<b>Can be stepped on/over:</b> [step_mechanics_pref ? "Allowed" : "Disallowed"]<br>"
 	dispvoreprefs += "<b>Can be picked up:</b> [pickup_pref ? "Allowed" : "Disallowed"]<br>"
+	dispvoreprefs += "<b>Global Vore Privacy is:</b> [eating_privacy_global ? "Subtle" : "Loud"]<br>"
 	dispvoreprefs += "<b>Current active belly:</b> [vore_selected ? vore_selected.name : "None"]<br>"
 	user << browse("<html><head><title>Vore prefs: [src]</title></head><body><center>[dispvoreprefs]</center></body></html>", "window=[name]mvp;size=300x400;can_resize=1;can_minimize=0")
 	onclose(user, "[name]")
@@ -1077,61 +1167,88 @@
 
 // Full screen belly overlays!
 /obj/screen/fullscreen/belly
-	icon = 'modular_chomp/icons/mob/screen_full_vore_ch.dmi' //CHOMPedit
+	icon = 'modular_chomp/icons/mob/vore_fullscreens/screen_full_vore_ch.dmi' //CHOMPedit
+
+/obj/screen/fullscreen/belly/fixed //CHOMPedit: tweaking to preserve save data
+	icon = 'icons/mob/screen_full_vore.dmi' //CHOMPedit: tweaking to preserve save data
 	icon_state = ""
+
+/* //Chomp DISABLE - use our solution, not upstream's.
+/obj/screen/fullscreen/belly/colorized/overlay
+	icon = 'icons/mob/screen_full_colorized_vore_overlays.dmi'
+*/ //Chomp DISABLE End
 
 /mob/living/proc/vorebelly_printout() //Spew the vorepanel belly messages into chat window for copypasting.
 	set name = "X-Print Vorebelly Settings"
 	set category = "Preferences"
 	set desc = "Print out your vorebelly messages into chat for copypasting."
 
-	for(var/belly in vore_organs)
-		if(isbelly(belly))
-			var/obj/belly/B = belly
-			to_chat(src, "<span class='notice'><b>Belly name:</b> [B.name]</span>")
-			to_chat(src, "<span class='notice'><b>Belly desc:</b> [B.desc]</span>")
-			to_chat(src, "<span class='notice'><b>Belly absorbed desc:</b> [B.absorbed_desc]</span>")
-			to_chat(src, "<span class='notice'><b>Vore verb:</b> [B.vore_verb]</span>")
-			to_chat(src, "<span class='notice'><b>Struggle messages (outside):</b></span>")
-			for(var/msg in B.struggle_messages_outside)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Struggle messages (inside):</b></span>")
-			for(var/msg in B.struggle_messages_inside)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Absorbed struggle messages (outside):</b></span>")
-			for(var/msg in B.absorbed_struggle_messages_outside)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Absorbed struggle messages (inside):</b></span>")
-			for(var/msg in B.absorbed_struggle_messages_inside)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Digest messages (owner):</b></span>")
-			for(var/msg in B.digest_messages_owner)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Digest messages (prey):</b></span>")
-			for(var/msg in B.digest_messages_prey)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Absorb messages:</b></span>")
-			for(var/msg in B.absorb_messages_owner)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Absorb messages (prey):</b></span>")
-			for(var/msg in B.absorb_messages_prey)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Unabsorb messages:</b></span>")
-			for(var/msg in B.unabsorb_messages_owner)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Unabsorb messages (prey):</b></span>")
-			for(var/msg in B.unabsorb_messages_prey)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Examine messages:</b></span>")
-			for(var/msg in B.examine_messages)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			for(var/msg in B.examine_messages_absorbed)
-				to_chat(src, "<span class='notice'>[msg]</span>")
-			to_chat(src, "<span class='notice'><b>Emote lists:</b></span>")
-			for(var/EL in B.emote_lists)
-				to_chat(src, "<span class='notice'><b>[EL]:</b></span>")
-				for(var/msg in B.emote_lists[EL])
+	//CHOMPEdit - "Belly HTML Export Earlyport"
+	var/result = tgui_alert(src, "Would you rather open the export panel?", "Selected Belly Export", list("Open Panel", "Print to Chat"))
+	if(result == "Open Panel")
+		var/mob/living/user = usr
+		if(!user)
+			to_chat(usr,"<span class='notice'>Mob undefined: [user]</span>")
+			return FALSE
+
+		var/datum/vore_look/export_panel/exportPanel
+		if(!exportPanel)
+			exportPanel = new(usr)
+
+		if(!exportPanel)
+			to_chat(user,"<span class='notice'>Export panel undefined: [exportPanel]</span>")
+			return
+
+		exportPanel.tgui_interact(user)
+	else
+		for(var/belly in vore_organs)
+			if(isbelly(belly))
+				var/obj/belly/B = belly
+				to_chat(src, "<span class='notice'><b>Belly name:</b> [B.name]</span>")
+				to_chat(src, "<span class='notice'><b>Belly desc:</b> [B.desc]</span>")
+				to_chat(src, "<span class='notice'><b>Belly absorbed desc:</b> [B.absorbed_desc]</span>")
+				to_chat(src, "<span class='notice'><b>Vore verb:</b> [B.vore_verb]</span>")
+				to_chat(src, "<span class='notice'><b>Struggle messages (outside):</b></span>")
+				for(var/msg in B.struggle_messages_outside)
 					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Struggle messages (inside):</b></span>")
+				for(var/msg in B.struggle_messages_inside)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Absorbed struggle messages (outside):</b></span>")
+				for(var/msg in B.absorbed_struggle_messages_outside)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Absorbed struggle messages (inside):</b></span>")
+				for(var/msg in B.absorbed_struggle_messages_inside)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Digest messages (owner):</b></span>")
+				for(var/msg in B.digest_messages_owner)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Digest messages (prey):</b></span>")
+				for(var/msg in B.digest_messages_prey)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Absorb messages:</b></span>")
+				for(var/msg in B.absorb_messages_owner)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Absorb messages (prey):</b></span>")
+				for(var/msg in B.absorb_messages_prey)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Unabsorb messages:</b></span>")
+				for(var/msg in B.unabsorb_messages_owner)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Unabsorb messages (prey):</b></span>")
+				for(var/msg in B.unabsorb_messages_prey)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Examine messages:</b></span>")
+				for(var/msg in B.examine_messages)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				for(var/msg in B.examine_messages_absorbed)
+					to_chat(src, "<span class='notice'>[msg]</span>")
+				to_chat(src, "<span class='notice'><b>Emote lists:</b></span>")
+				for(var/EL in B.emote_lists)
+					to_chat(src, "<span class='notice'><b>[EL]:</b></span>")
+					for(var/msg in B.emote_lists[EL])
+						to_chat(src, "<span class='notice'>[msg]</span>")
+	//CHOMPEdit End
 
 /**
  * Small helper component to manage the vore panel HUD icon
@@ -1146,7 +1263,7 @@
 
 /datum/component/vore_panel/RegisterWithParent()
 	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, .proc/create_mob_button)
+	RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, PROC_REF(create_mob_button))
 	var/mob/living/owner = parent
 	if(owner.client)
 		create_mob_button(parent)
@@ -1169,7 +1286,7 @@
 	var/datum/hud/HUD = user.hud_used
 	if(!screen_icon)
 		screen_icon = new()
-		RegisterSignal(screen_icon, COMSIG_CLICK, .proc/vore_panel_click)
+		RegisterSignal(screen_icon, COMSIG_CLICK, PROC_REF(vore_panel_click))
 	if(ispAI(user))
 		screen_icon.icon = 'icons/mob/pai_hud.dmi'
 		screen_icon.screen_loc = ui_acti
@@ -1183,8 +1300,7 @@
 /datum/component/vore_panel/proc/vore_panel_click(source, location, control, params, user)
 	var/mob/living/owner = user
 	if(istype(owner) && owner.vorePanel)
-		INVOKE_ASYNC(owner, /mob/living/proc/insidePanel, owner) //CHOMPEdit
-
+		INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, insidePanel), owner) //CHOMPEdit
 /**
  * Screen object for vore panel
  */

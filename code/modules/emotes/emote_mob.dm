@@ -4,7 +4,7 @@
 	var/last_emote_summary
 
 /mob/proc/get_available_emotes()
-	return global._default_mob_emotes
+	return global._default_mob_emotes.Copy()
 
 /mob/proc/can_emote(var/emote_type)
 	return (stat == CONSCIOUS)
@@ -80,7 +80,7 @@
 
 	var/decl/emote/use_emote = get_emote_by_key(act)
 	if(!istype(use_emote))
-		to_chat(src, SPAN_WARNING("Unknown emote '[act]'. Type <b>say *help</b> for a list of usable emotes."))
+		to_chat(src, SPAN_WARNING("Unknown emote '[act]'. Type <b>say *help</b> for a list of usable emotes. ([act] [message])")) //CHOMPEdit - Add full message in the event you used * instead of ! or something like that
 		return
 
 	if(!use_emote.mob_can_use(src))
@@ -128,6 +128,7 @@
 	if(findtext(subtext, "*"))
 		// abort abort!
 		to_chat(emoter, SPAN_WARNING("You may use only one \"["*"]\" symbol in your emote."))
+		to_chat(emoter, SPAN_WARNING(message))
 		return
 
 	if(pretext)

@@ -63,6 +63,11 @@
 
 	var/rank //pyro, operative, ammo, stealth. more to come. Do not leave blank.
 
+	can_be_drop_prey = FALSE //CHOMP Add
+	species_sounds = "Mouse"
+	pain_emote_1p = list("squeak", "squik") // CHOMP Addition: Pain/etc sounds
+	pain_emote_1p = list("squeaks", "squiks") // CHOMP Addition: Pain/etc sounds
+
 /mob/living/simple_mob/animal/space/mouse_army/New()
 	..()
 

@@ -42,6 +42,8 @@
 	var/frustration = 0
 	var/max_frustration = 0
 
+	can_pain_emote = FALSE // CHOMPEdit: Sanity/safety, if bots ever get emotes later, undo this
+
 /mob/living/bot/New()
 	..()
 	update_icons()
@@ -296,11 +298,17 @@
 			frustration++ //CHOMPEdit
 	return
 
-/mob/living/bot/proc/handleFrustrated(var/targ)
-	obstacle = targ ? target_path[1] : patrol_path[1]
+
+/mob/living/bot/proc/handleFrustrated(has_target)
+	obstacle = null
+	if (has_target)
+		if (length(target_path))
+			obstacle = target_path[1]
+	else if (length(patrol_path))
+		obstacle = patrol_path[1]
 	target_path = list()
 	patrol_path = list()
-	return
+
 
 /mob/living/bot/proc/lookForTargets()
 	return
@@ -319,7 +327,7 @@
 	if(makeStep(patrol_path))
 		frustration = 0
 	else if(max_frustration)
-		frustration++ 
+		frustration++
 	//CHOMPEdit End
 	return
 

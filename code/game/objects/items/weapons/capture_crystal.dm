@@ -8,6 +8,7 @@
 	throwforce = 0
 	force = 0
 	action_button_name = "Command"
+	w_class = ITEMSIZE_SMALL //CHOMPEdit
 
 	var/active = FALSE					//Is it set up?
 	var/mob/living/owner				//Reference to the owner
@@ -81,7 +82,7 @@
 	else
 		to_chat(M, "<span class='notice'>\The [src] emits an unpleasant tone... \The [bound_mob] is unresponsive.</span>")
 		playsound(src, 'sound/effects/capture-crystal-negative.ogg', 75, 1, -1)
-	
+
 //Lets the owner get AI controlled bound mobs to follow them, or tells player controlled mobs to follow them.
 /obj/item/capture_crystal/verb/follow_owner()
 	set name = "Toggle Follow"
@@ -208,7 +209,7 @@
 	else return TRUE
 
 /obj/item/capture_crystal/attack(mob/living/M, mob/living/user)
-	if(bound_mob)	
+	if(bound_mob)
 		if(!bound_mob.devourable)	//Don't eat if prefs are bad
 			return
 		if(user.zone_sel.selecting == "mouth")	//Click while targetting the mouth and you eat/feed the stored mob to whoever you clicked on
@@ -249,8 +250,8 @@
 
 //Make it so the crystal knows if its mob references get deleted to make sure things get cleaned up
 /obj/item/capture_crystal/proc/knowyoursignals(mob/living/M, mob/living/U)
-	RegisterSignal(M, COMSIG_PARENT_QDELETING, .proc/mob_was_deleted, TRUE)
-	RegisterSignal(U, COMSIG_PARENT_QDELETING, .proc/owner_was_deleted, TRUE)
+	RegisterSignal(M, COMSIG_PARENT_QDELETING, PROC_REF(mob_was_deleted), TRUE)
+	RegisterSignal(U, COMSIG_PARENT_QDELETING, PROC_REF(owner_was_deleted), TRUE)
 
 //The basic capture command does most of the registration work.
 /obj/item/capture_crystal/proc/capture(mob/living/M, mob/living/U)
@@ -268,7 +269,7 @@
 		bound_mob.capture_caught = TRUE
 		persist_storable = FALSE
 	desc = "A glowing crystal in what appears to be some kind of steel housing."
-	
+
 //Determines the capture chance! So you can't capture AI mobs if they're perfectly healthy and all that
 /obj/item/capture_crystal/proc/capture_chance(mob/living/M, user)
 	if(capture_chance_modifier >= 100)		//Master crystal always work
@@ -435,7 +436,7 @@
 /obj/item/capture_crystal/proc/recall(mob/living/user)
 	if(bound_mob in view(user))		//We can only recall it if we can see it
 		var/turf/turfmemory = get_turf(bound_mob)
-		if(isanimal(bound_mob))
+		if(isanimal(bound_mob) && bound_mob.ai_holder)
 			var/mob/living/simple_mob/M = bound_mob
 			M.ai_holder.go_sleep()	//AI doesn't need to think when it's in the crystal
 		bound_mob.forceMove(src)
@@ -451,7 +452,9 @@
 //Let's let our mob out!
 /obj/item/capture_crystal/proc/unleash(mob/living/user, atom/target)
 	if(!user && !target)			//We got thrown but we're not sure who did it, let's go to where the crystal is
-		bound_mob.forceMove(src.drop_location())
+		var/drop_loc = get_turf(src)
+		if (drop_loc)
+			bound_mob.forceMove(drop_loc)
 		return
 	if(!target)						//We know who wants to let us out, but they didn't say where, so let's drop us on them
 		bound_mob.forceMove(user.drop_location())
@@ -477,8 +480,9 @@
 
 //IF the crystal somehow ends up in a tummy and digesting with a bound mob who doesn't want to be eaten, let's move them to the ground
 /obj/item/capture_crystal/digest_act(var/atom/movable/item_storage = null)
-	if(bound_mob in contents && !bound_mob.devourable)
-		bound_mob.forceMove(src.drop_location())
+	if(bound_mob) //CHOMPEdit
+		if(bound_mob in contents && !bound_mob.devourable)
+			bound_mob.forceMove(src.drop_location())
 	return ..()
 
 //We got thrown! Let's figure out what to do

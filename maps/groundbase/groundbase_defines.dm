@@ -40,8 +40,8 @@
 
 	use_overmap = TRUE
 	overmap_z = Z_LEVEL_MISC
-	overmap_size = 25
-	overmap_event_areas = 15
+	overmap_size = 62
+	overmap_event_areas = 100
 	usable_email_tlds = list("virgo.nt")
 
 	zlevel_datum_type = /datum/map_z_level/groundbase
@@ -340,7 +340,7 @@
 	skybox_pixel_x = 0
 	skybox_pixel_y = 0
 
-	initial_generic_waypoints = list("groundbase", "gb_excursion_pad")
+	initial_generic_waypoints = list("groundbase", "gb_excursion_pad","omship_axolotl")
 	initial_restricted_waypoints = list()
 
 	extra_z_levels = list(
@@ -440,7 +440,7 @@
 	. = ..()
 //	seed_submaps(list(Z_LEVEL_MINING), 60, /area/gb_mine/unexplored, /datum/map_template/space_rocks)	//POI seeding
 	new /datum/random_map/automata/cave_system/no_cracks(null, 3, 3, Z_LEVEL_MINING, world.maxx - 4, world.maxy - 4)
-	new /datum/random_map/noise/ore/mining(null, 1, 1, Z_LEVEL_MINING, 64, 64)
+	new /datum/random_map/noise/ore/gb_mining(null, 1, 1, Z_LEVEL_MINING, 64, 64)
 
 /datum/map_z_level/gb_lateload/mining
 	z = Z_LEVEL_MINING

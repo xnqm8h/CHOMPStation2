@@ -83,7 +83,7 @@
 
 	maxHealth = 125
 	health = 125
-	movement_cooldown = 7
+	movement_cooldown = 3
 
 	response_help = "touches"
 	response_disarm = "pushes"
@@ -120,6 +120,7 @@
 	swallowTime = 3 SECONDS
 	vore_capacity = 1
 	vore_default_mode = DM_DIGEST
+	can_be_drop_prey = FALSE //CHOMP Add
 
 /datum/ai_holder/mimic
 	wander = FALSE

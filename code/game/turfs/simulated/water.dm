@@ -29,11 +29,11 @@
 	handle_fish()
 	// soundloop = new(list(src), FALSE) // CHOMPEdit: Removing soundloop for now.
 	// soundloop.start() // CHOMPEdit: Removing soundloop for now.
-	
+
 /turf/simulated/floor/water/Destroy()
 	// soundloop.stop() // CHOMPEdit: Removing soundloop for now.
 	// QDEL_NULL(soundloop) // CHOMPEdit: Removing soundloop for now.
-	
+
 	. = ..()
 
 /turf/simulated/floor/water/update_icon()
@@ -136,7 +136,9 @@
 /mob/living/proc/check_submerged()
 	if(buckled)
 		return 0
-	if(hovering)
+	if(hovering || flying)
+		if(flying)
+			adjust_nutrition(-0.5)
 		return 0
 	if(locate(/obj/structure/catwalk) in loc)
 		return 0
@@ -199,6 +201,12 @@ var/list/shoreline_icon_cache = list()
 		add_overlay(shoreline_icon_cache[cache_string])
 
 /turf/simulated/floor/water/is_safe_to_enter(mob/living/L)
+	 //CHOMPEDIT: Aquatic flags simulated water as safe now
+	if(istype(L,/mob/living/carbon))
+		var /mob/living/carbon/A = L
+		if(/datum/trait/positive/aquatic in A.species.traits)
+			return TRUE
+		 //CHOMPEDIT: Aquatic flags simulated water as safe now
 	if(L.get_water_protection() < 1)
 		return FALSE
 	return ..()

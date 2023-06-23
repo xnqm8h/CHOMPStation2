@@ -78,6 +78,15 @@
 				prob(9);/obj/item/weapon/cell/super,
 				prob(1);/obj/item/weapon/cell/hyper)
 
+/obj/random/powercell/device
+	name = "random device powercell"
+	desc = "This is a random device powercell."
+	icon_state = "random_device"
+
+/obj/random/powercell/device/item_to_spawn()
+	return pick(prob(80);/obj/item/weapon/cell/device,
+				prob(10);/obj/item/weapon/cell/device/hyper,
+				prob(10);/obj/item/weapon/cell/device/empproof)
 
 /obj/random/bomb_supply
 	name = "bomb supply"
@@ -245,6 +254,7 @@
 	desc = "Hot Stuff."
 	icon_state = "sus"
 	spawn_nothing_percentage = 50
+
 /obj/random/contraband/item_to_spawn()
 	return pick(prob(6);/obj/item/weapon/storage/pill_bottle/paracetamol, //VOREStation Edit,
 				prob(4);/obj/item/weapon/storage/pill_bottle/happy,
@@ -275,6 +285,7 @@
 /obj/random/cash/item_to_spawn()
 	return pick(prob(320);/obj/random/maintenance/clean,
 				prob(12);/obj/item/weapon/spacecash/c1,
+				prob(10);/obj/item/weapon/spacecash/c5,
 				prob(8);/obj/item/weapon/spacecash/c10,
 				prob(4);/obj/item/weapon/spacecash/c20,
 				prob(1);/obj/item/weapon/spacecash/c50,
@@ -307,23 +318,71 @@
 				prob(5);/obj/item/weapon/spacecash/c1000)
 
 /obj/random/soap
-	name = "Random Soap"
-	desc = "This is a random bar of soap."
-	icon = 'icons/obj/items.dmi'
-	icon_state = "soap"
+	name = "Random Soap (All)"
+	desc = "This is a random bar of soap. Includes special types."
+	icon = 'icons/obj/soap.dmi'
+	icon_state = "rainbow_soap"
 
 /obj/random/soap/item_to_spawn()
-	return pick(prob(3);/obj/item/weapon/soap,
-				prob(2);/obj/item/weapon/soap/nanotrasen,
-				prob(2);/obj/item/weapon/soap/deluxe,
-				prob(1);/obj/item/weapon/soap/syndie)
+	return pick(/obj/item/weapon/soap,
+				/obj/item/weapon/soap/nanotrasen,
+				/obj/item/weapon/soap/deluxe,
+				/obj/item/weapon/soap/syndie,
+				/obj/item/weapon/soap/space_soap,
+				/obj/item/weapon/soap/space_soap,
+				/obj/item/weapon/soap/water_soap,
+				/obj/item/weapon/soap/fire_soap,
+				/obj/item/weapon/soap/rainbow_soap,
+				/obj/item/weapon/soap/diamond_soap,
+				/obj/item/weapon/soap/uranium_soap,
+				/obj/item/weapon/soap/silver_soap,
+				/obj/item/weapon/soap/brown_soap,
+				/obj/item/weapon/soap/white_soap,
+				/obj/item/weapon/soap/grey_soap,
+				/obj/item/weapon/soap/pink_soap,
+				/obj/item/weapon/soap/purple_soap,
+				/obj/item/weapon/soap/blue_soap,
+				/obj/item/weapon/soap/cyan_soap,
+				/obj/item/weapon/soap/green_soap,
+				/obj/item/weapon/soap/yellow_soap,
+				/obj/item/weapon/soap/orange_soap,
+				/obj/item/weapon/soap/red_soap,
+				/obj/item/weapon/soap/golden_soap)
 
+/obj/random/soap_common
+	name = "Random Soap (Common)"
+	desc = "This is a random bar of soap. Only has the basic types; no NT, deluxe, or syndisoap."
+	icon = 'icons/obj/soap.dmi'
+	icon_state = "rainbow_soap"
+
+/obj/random/soap_common/item_to_spawn()
+	return pick(/obj/item/weapon/soap,
+				/obj/item/weapon/soap/space_soap,
+				/obj/item/weapon/soap/space_soap,
+				/obj/item/weapon/soap/water_soap,
+				/obj/item/weapon/soap/fire_soap,
+				/obj/item/weapon/soap/rainbow_soap,
+				/obj/item/weapon/soap/diamond_soap,
+				/obj/item/weapon/soap/uranium_soap,
+				/obj/item/weapon/soap/silver_soap,
+				/obj/item/weapon/soap/brown_soap,
+				/obj/item/weapon/soap/white_soap,
+				/obj/item/weapon/soap/grey_soap,
+				/obj/item/weapon/soap/pink_soap,
+				/obj/item/weapon/soap/purple_soap,
+				/obj/item/weapon/soap/blue_soap,
+				/obj/item/weapon/soap/cyan_soap,
+				/obj/item/weapon/soap/green_soap,
+				/obj/item/weapon/soap/yellow_soap,
+				/obj/item/weapon/soap/orange_soap,
+				/obj/item/weapon/soap/red_soap,
+				/obj/item/weapon/soap/golden_soap)
 
 /obj/random/drinkbottle
 	name = "random drink"
 	desc = "This is a random drink."
 	icon = 'icons/obj/drinks.dmi'
-	icon_state = "whiskeybottle"
+	icon_state = "whiskeybottle1"
 
 /obj/random/drinkbottle/item_to_spawn()
 	return pick(/obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey,
@@ -704,8 +763,13 @@
 				/obj/item/toy/plushie/nukeplushie,
 				/obj/item/toy/plushie/otter,
 				/obj/item/toy/plushie/vox,
-				/obj/item/toy/plushie/borgplushie/drakiesec,
-				/obj/item/toy/plushie/borgplushie/drakiemed,
+				pick(list(/obj/item/toy/plushie/borgplushie/drake/sec,
+							/obj/item/toy/plushie/borgplushie/drake/med,
+							/obj/item/toy/plushie/borgplushie/drake/sci,
+							/obj/item/toy/plushie/borgplushie/drake/jani,
+							/obj/item/toy/plushie/borgplushie/drake/eng,
+							/obj/item/toy/plushie/borgplushie/drake/mine,
+							/obj/item/toy/plushie/borgplushie/drake/trauma)),
 				//VOREStation Add End
 				//YawnWider Add Start
 				/obj/item/toy/plushie/teshari/_yw,

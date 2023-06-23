@@ -169,7 +169,7 @@
 
 /area/surface/outpost/shelter
 	name = "Wilderness Shelter"
-	
+
 /area/surface/outpost/shelter/dorms
 	name = "Wilderness Shelter Dorms"
 	icon_state = "Sleep"
@@ -182,10 +182,32 @@
 	icon_state = "exit"
 	ambience = list('sound/ambience/ambimine.ogg', 'sound/ambience/song_game.ogg', 'sound/music/LRRMenu.ogg', 'sound/music/LRRTrack3.ogg', 'sound/ambience/cave/AmbCaveDebriA.ogg', 'sound/ambience/cave/AmbCaveDebriB.ogg', 'sound/ambience/cave/AmbCaveDebriC.ogg', 'sound/ambience/cave/AmbCaveDebriD.ogg')
 	outdoors = OUTDOORS_YES
-	
+
 /area/surface/outpost/shelter/utilityroom
 	name = "Wilderness Shelter Utility Room"
 	icon_state = "substation"
+
+//Valley stuffs, chomps Edit by Jasper, for wilds but stranger.
+/area/surface/outpost/unfinished
+	name = "Unfinished"
+	icon_state = "red"
+
+/area/surface/outside/valley/inner
+	name = "Valley Inner"
+	icon_state = "yellow"
+
+/area/surface/outside/valley/walls
+	name = "Valley Walls"
+	icon_state = "yellow"
+	outdoors = OUTDOORS_NO
+
+/area/surface/outside/valley/edge
+	name = "Valley Edge"
+	icon_state = "yellow"
+
+/area/surface/outside/valley/river
+	name = "Valley River"
+	icon_state = "yellow"
 
 // Main mining outpost
 /area/surface/outpost/mining_main
@@ -996,6 +1018,25 @@ z
 /area/crew_quarters/seconddeck/gym
 	name = "\improper Station Gym"
 	icon_state = "fitness"
+
+//CHOMPstation Edit 8/8/22 - Added a Art Gallery and some missing areas Kassc wanted me to add
+/area/crew_quarters/seconddeck/artgallery
+	name = "\improper Art Gallery"
+	icon_state = "art"
+
+/area/crew_quarters/seconddeck/artsupplies
+	name = "\improper Art Supplies"
+	icon_state = "artsupply"
+
+/area/crew_quarters/seconddeck/gameroom
+	name = "\improper Game Room"
+	icon_state = "gaming"
+
+//CHOMPstation Edit 8/27/22 - VR Room for station baby~
+/area/crew_quarters/thirddeck/vrroom
+	name = "\improper Virtual Reality Room"
+	icon_state = "gaming"
+	flags = RAD_SHIELDED //Depending on the video game, you might still get figuative cancer
 
 //CHOMPStation Edit End
 
@@ -2021,6 +2062,7 @@ End Chompstation Edit*/
 	name = "\improper Wreck"
 	icon_state = "storage"
 	ambience = AMBIENCE_RUINS
+
 
 //Temp Removal TFF 15/2/20
 /*

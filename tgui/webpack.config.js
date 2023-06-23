@@ -35,7 +35,9 @@ module.exports = (env = {}, argv) => {
     entry: {
       'tgui': [
         './packages/tgui-polyfill',
-        './packages/tgui',
+        // CHOMPstation Edit - TGUI Modulation
+        // './packages/tgui',
+        './packages/tgui_ch',
       ],
     },
     output: {
@@ -85,14 +87,7 @@ module.exports = (env = {}, argv) => {
         },
         {
           test: /\.(png|jpg|svg)$/,
-          use: [
-            {
-              loader: require.resolve('url-loader'),
-              options: {
-                esModule: false,
-              },
-            },
-          ],
+          type: 'asset/inline',
         },
       ],
     },

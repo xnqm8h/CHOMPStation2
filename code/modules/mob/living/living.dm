@@ -96,7 +96,7 @@
 	if(!..())
 		return 0
 
-	usr.visible_message("<b>[src]</b> points to [A]")
+	usr.visible_message("<span class='filter_notice'><b>[src]</b> points to [A].</span>")
 	return 1
 
 /mob/living/verb/succumb()
@@ -123,7 +123,27 @@
 		health = 100
 		set_stat(CONSCIOUS)
 	else
+		// CHOMPEdit Start: Pain/etc calculations, but more efficient:tm: - this should work for literally anything that applies to health. Far better than slapping emote("pain") everywhere like scream does.
+		var/initialhealth = health // CHOMPEdit: Getting our health before this check
 		health = getMaxHealth() - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss() - halloss
+		if(!((ishuman(src)) || (issilicon(src))) && src.can_pain_emote) // Only run this if we're non-human/non-silicon (bots and mechanical simplemobs should be allowed to make pain sounds) & can emote pain, bc humans + carbons already do this. human_damage doesn't call parent, but sanity is better here.
+			if(health < initialhealth) // Did we lose health?
+				// Yes. How much by?
+				var/damage = initialhealth - health // Get our damage (say, 200 - 180 = 20, etc etc)
+				var/pain_noise = (damage * rand(0.5, 1.5)) // Multiply damage by our rand mod. 50 damage becomes 50 x 0.5, means prob 25. 50 x 1.5 means prob 75, etc.
+				switch(damage)
+					if(-INFINITY to 0)
+						return
+					if(1 to 25)
+						if(prob(pain_noise) && !isbelly(loc)) // No pain noises inside bellies.
+							emote("pain")
+					if(26 to 50)
+						if(prob(pain_noise * 1.5) && !isbelly(loc)) // No pain noises inside bellies.
+							emote("pain")
+					if(51 to INFINITY)
+						if(prob(pain_noise * 3)  && !isbelly(loc)) // More likely, most severe damage. No pain noises inside bellies.
+							emote("pain")
+	// CHOMPEdit End: Pain
 
 //This proc is used for mobs which are affected by pressure to calculate the amount of pressure that actually
 //affects them once clothing is factored in. ~Errorage
@@ -192,8 +212,12 @@
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_brute_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_brute_damage_percent
 	else if(amount < 0)
 		for(var/datum/modifier/M in modifiers)
@@ -219,8 +243,12 @@
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_oxy_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_oxy_damage_percent
 	else if(amount < 0)
 		for(var/datum/modifier/M in modifiers)
@@ -243,8 +271,12 @@
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_tox_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_tox_damage_percent
 	else if(amount < 0)
 		for(var/datum/modifier/M in modifiers)
@@ -273,8 +305,12 @@
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_fire_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_fire_damage_percent
 	else if(amount < 0)
 		for(var/datum/modifier/M in modifiers)
@@ -298,8 +334,12 @@
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
 			if(!isnull(M.incoming_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_clone_damage_percent))
+				if(M.energy_based)
+					M.energy_source.use(M.damage_cost*amount)
 				amount *= M.incoming_clone_damage_percent
 	else if(amount < 0)
 		for(var/datum/modifier/M in modifiers)
@@ -331,6 +371,9 @@
 	if(status_flags & GODMODE)	return 0	//godmode
 	if(amount > 0)
 		for(var/datum/modifier/M in modifiers)
+			if(M.energy_based && (!isnull(M.incoming_hal_damage_percent) || !isnull(M.disable_duration_percent)))
+				M.energy_source.use(M.damage_cost*amount) // Cost of the Damage absorbed.
+				M.energy_source.use(M.energy_cost) // Cost of the Effect absorbed.
 			if(!isnull(M.incoming_damage_percent))
 				amount *= M.incoming_damage_percent
 			if(!isnull(M.incoming_hal_damage_percent))
@@ -361,7 +404,17 @@
 	return result
 
 /mob/living/proc/setMaxHealth(var/newMaxHealth)
-	health = (health/maxHealth) * (newMaxHealth) //VOREStation Add - Adjust existing health
+	var/h_mult = maxHealth / newMaxHealth	//VOREStation Add Start - Calculate change multiplier
+	if(bruteloss)							//In case a damage value is 0, divide by 0 bad
+		bruteloss = round(bruteloss / h_mult)		//Health is calculated on life based on damage types, so we update the damage and let life handle health
+	if(fireloss)
+		fireloss = round(fireloss / h_mult)
+	if(toxloss)
+		toxloss = round(toxloss / h_mult)
+	if(oxyloss)
+		oxyloss = round(oxyloss / h_mult)
+	if(cloneloss)
+		cloneloss = round(cloneloss / h_mult)	//VOREStation Add End
 	maxHealth = newMaxHealth
 
 /mob/living/Stun(amount)
@@ -607,12 +660,18 @@
 	SetStunned(0)
 	SetWeakened(0)
 
+	// undo various death related conveniences
+	sight = initial(sight)
+	see_in_dark = initial(see_in_dark)
+	see_invisible = initial(see_invisible)
+
 	// shut down ongoing problems
 	radiation = 0
 	nutrition = 400
 	bodytemperature = T20C
 	sdisabilities = 0
 	disabilities = 0
+	resting = FALSE
 
 	// fix blindness and deafness
 	blinded = 0
@@ -658,13 +717,13 @@
 	//VOREStation Edit Start - Making it so SSD people have prefs with fallback to original style.
 	if(config.allow_Metadata)
 		if(ooc_notes)
-			to_chat(usr, "[src]'s Metainfo:<br>[ooc_notes]")
+			to_chat(usr, "<span class='filter_notice'>[src]'s Metainfo:<br>[ooc_notes]</span>")
 		else if(client)
-			to_chat(usr, "[src]'s Metainfo:<br>[client.prefs.metadata]")
+			to_chat(usr, "<span class='filter_notice'>[src]'s Metainfo:<br>[client.prefs.metadata]</span>")
 		else
-			to_chat(usr, "[src] does not have any stored infomation!")
+			to_chat(usr, "<span class='filter_notice'>[src] does not have any stored infomation!</span>")
 	else
-		to_chat(usr, "OOC Metadata is not supported by this server!")
+		to_chat(usr, "<span class='filter_notice'>OOC Metadata is not supported by this server!</span>")
 	//VOREStation Edit End - Making it so SSD people have prefs with fallback to original style.
 
 	return
@@ -734,7 +793,7 @@
 	set category = "IC"
 
 	resting = !resting
-	to_chat(src, "<span class='notice'>You are now [resting ? "resting" : "getting up"]</span>")
+	to_chat(src, "<span class='notice'>You are now [resting ? "resting" : "getting up"].</span>")
 	update_canmove()
 
 //called when the mob receives a bright flash
@@ -768,10 +827,8 @@
 /mob/living/proc/slip(var/slipped_on,stun_duration=8)
 	return 0
 
-/mob/living/carbon/drop_from_inventory(var/obj/item/W, var/atom/Target = null)
-	if(W in internal_organs)
-		return 0
-	return ..()
+/mob/living/carbon/drop_from_inventory(var/obj/item/W, var/atom/target = null)
+	return !(W in internal_organs) && ..()
 
 /mob/living/touch_map_edge()
 
@@ -797,6 +854,10 @@
 /mob/living/adjustEarDamage(var/damage, var/deaf)
 	ear_damage = max(0, ear_damage + damage)
 	ear_deaf = max(0, ear_deaf + deaf)
+	if(ear_deaf > 0)
+		deaf_loop.start() // CHOMPStation Add: Ear Ringing/Deafness - Not sure if we need this, but, safety.
+	else if(ear_deaf <= 0)
+		deaf_loop.stop() // CHOMPStation Add: Ear Ringing/Deafness - Not sure if we need this, but, safety.
 
 //pass a negative argument to skip one of the variable
 /mob/living/setEarDamage(var/damage, var/deaf)
@@ -804,6 +865,7 @@
 		ear_damage = damage
 	if(deaf >= 0)
 		ear_deaf = deaf
+		deaf_loop.start() // CHOMPStation Add: Ear Ringing/Deafness - Not sure if we need this, but, safety.
 
 /mob/living/proc/vomit(var/skip_wait, var/blood_vomit)
 	if(!check_has_mouth())
@@ -980,7 +1042,7 @@
 	// Now for the regular stuff.
 	var/matrix/M = matrix()
 	M.Scale(desired_scale_x, desired_scale_y)
-	M.Translate(0, (vis_height/2)*(desired_scale_y-1)) //VOREStation edit
+	M.Translate(center_offset * desired_scale_x, (vis_height/2)*(desired_scale_y-1)) //CHOMPEdit
 	src.transform = M //VOREStation edit
 	handle_status_indicators()
 
@@ -1088,6 +1150,7 @@
 				src.inertia_dir = get_dir(target, src)
 				step(src, inertia_dir)
 			item.throw_at(target, throw_range, item.throw_speed, src)
+			item.throwing = 1 //Small edit so thrown interactions actually work!
 			return TRUE
 		else
 			return FALSE
@@ -1095,16 +1158,18 @@
 	if(!item)
 		return FALSE //Grab processing has a chance of returning null
 
+/* CHOMPEdit. If I want to do a nice little give I use the actual verb for it.
 	if(a_intent == I_HELP && Adjacent(target) && isitem(item) && ishuman(target))
 		var/obj/item/I = item
 		var/mob/living/carbon/human/H = target
 		if(H.in_throw_mode && H.a_intent == I_HELP && unEquip(I))
 			H.put_in_hands(I) // If this fails it will just end up on the floor, but that's fitting for things like dionaea.
-			visible_message("<b>[src]</b> hands \the [H] \a [I].", SPAN_NOTICE("You give \the [target] \a [I]."))
+			visible_message("<span class='filter_notice'><b>[src]</b> hands \the [H] \a [I].</span>", SPAN_NOTICE("You give \the [target] \a [I]."))
 		else
 			to_chat(src, SPAN_NOTICE("You offer \the [I] to \the [target]."))
 			do_give(H)
 		return TRUE
+*/
 
 	drop_from_inventory(item)
 
@@ -1182,15 +1247,15 @@
 /mob/living/vv_get_header()
 	. = ..()
 	. += {"
-		<a href='?_src_=vars;rename=\ref[src]'><b>[src]</b></a><font size='1'>
-		<br><a href='?_src_=vars;datumedit=\ref[src];varnameedit=ckey'>[ckey ? ckey : "No ckey"]</a> / <a href='?_src_=vars;datumedit=\ref[src];varnameedit=real_name'>[real_name ? real_name : "No real name"]</a>
+		<a href='?_src_=vars;[HrefToken()];rename=\ref[src]'><b>[src]</b></a><font size='1'>
+		<br><a href='?_src_=vars;[HrefToken()];datumedit=\ref[src];varnameedit=ckey'>[ckey ? ckey : "No ckey"]</a> / <a href='?_src_=vars;[HrefToken()];datumedit=\ref[src];varnameedit=real_name'>[real_name ? real_name : "No real name"]</a>
 		<br>
-		BRUTE:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=brute'>[getBruteLoss()]</a>
-		FIRE:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=fire'>[getFireLoss()]</a>
-		TOXIN:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=toxin'>[getToxLoss()]</a>
-		OXY:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=oxygen'>[getOxyLoss()]</a>
-		CLONE:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=clone'>[getCloneLoss()]</a>
-		BRAIN:<a href='?_src_=vars;mobToDamage=\ref[src];adjustDamage=brain'>[getBrainLoss()]</a>
+		BRUTE:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=brute'>[getBruteLoss()]</a>
+		FIRE:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=fire'>[getFireLoss()]</a>
+		TOXIN:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=toxin'>[getToxLoss()]</a>
+		OXY:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=oxygen'>[getOxyLoss()]</a>
+		CLONE:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=clone'>[getCloneLoss()]</a>
+		BRAIN:<a href='?_src_=vars;[HrefToken()];mobToDamage=\ref[src];adjustDamage=brain'>[getBrainLoss()]</a>
 		</font>
 		"}
 
@@ -1220,7 +1285,7 @@
 
 /datum/component/character_setup/RegisterWithParent()
 	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, .proc/create_mob_button)
+	RegisterSignal(parent, COMSIG_MOB_CLIENT_LOGIN, PROC_REF(create_mob_button))
 	var/mob/owner = parent
 	if(owner.client)
 		create_mob_button(parent)
@@ -1238,7 +1303,7 @@
 	var/datum/hud/HUD = user.hud_used
 	if(!screen_icon)
 		screen_icon = new()
-		RegisterSignal(screen_icon, COMSIG_CLICK, .proc/character_setup_click)
+		RegisterSignal(screen_icon, COMSIG_CLICK, PROC_REF(character_setup_click))
 	if(ispAI(user))
 		screen_icon.icon = 'icons/mob/pai_hud.dmi'
 		screen_icon.screen_loc = ui_acti

@@ -7,6 +7,8 @@ var/list/admin_verbs_default = list(
 	/client/proc/cmd_admin_say,			//VOREStation Add,
 	/client/proc/cmd_mod_say,			//VOREStation Add,
 	/client/proc/cmd_event_say,			//VOREStation Add,
+	/client/proc/cmd_mentor_ticket_panel,
+	/client/proc/cmd_mentor_say,
 //	/client/proc/hide_verbs,			//hides all our adminverbs, //VOREStation Remove,
 //	/client/proc/hide_most_verbs,		//hides all our hideable adminverbs, //VOREStation Remove,
 //	/client/proc/debug_variables,		//allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify, //VOREStation Remove,
@@ -16,6 +18,8 @@ var/list/admin_verbs_default = list(
 //	/client/proc/cmd_mod_say,
 //	/client/proc/deadchat				//toggles deadchat on/off,
 //	/client/proc/toggle_ahelp_sound,
+	/client/proc/toggle_admin_global_looc,
+	/client/proc/toggle_admin_deadchat
 	)
 
 var/list/admin_verbs_admin = list(
@@ -122,7 +126,11 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/set_uplink, //VOREStation Add,
 	/datum/admins/proc/sendFax,
 	/client/proc/despawn_player,
-	/datum/admins/proc/view_feedback
+	/datum/admins/proc/view_feedback,
+	/client/proc/make_mentor,
+	/client/proc/unmake_mentor,
+	/client/proc/removetickets,
+	/client/proc/delbook
 	)
 
 var/list/admin_verbs_ban = list(
@@ -159,7 +167,13 @@ var/list/admin_verbs_fun = list(
 	/client/proc/admin_lightning_strike,
 	/client/proc/resize, //VOREStation Add,
 	/client/proc/cmd_admin_droppod_deploy,
-	/client/proc/adminorbit //VOREStation Add,
+	/client/proc/adminorbit, //VOREStation Add
+	/client/proc/add_mob_for_narration,	//VOREStation Add
+	/client/proc/remove_mob_for_narration,	//VOREStation Add
+	/client/proc/narrate_mob,	//VOREStation Add
+	/client/proc/narrate_mob_args, //VOREStation Add
+	/client/proc/getPlayerStatus //VORESTation Add
+
 	)
 
 var/list/admin_verbs_spawn = list(
@@ -175,7 +189,8 @@ var/list/admin_verbs_spawn = list(
 	/client/proc/spawn_chemdisp_cartridge,
 	/client/proc/map_template_load,
 	/client/proc/map_template_upload,
-	/client/proc/map_template_load_on_new_z
+	/client/proc/map_template_load_on_new_z,
+	/client/proc/eventkit_open_mob_spawner //VOREStation Add
 	)
 
 var/list/admin_verbs_server = list(
@@ -225,7 +240,7 @@ var/list/admin_verbs_debug = list(
 	/client/proc/cmd_debug_tog_aliens,
 	/client/proc/cmd_display_del_log,
 	/client/proc/cmd_display_init_log,
-	/client/proc/cmd_display_overlay_log,
+	// /client/proc/cmd_display_overlay_log,
 	/client/proc/air_report,
 	/client/proc/reload_admins,
 	/client/proc/reload_eventMs,

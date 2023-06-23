@@ -31,6 +31,21 @@
 	vore_active = TRUE
 	vore_capacity = 1
 	vore_icons = SA_ICON_LIVING | SA_ICON_REST
+	center_offset = 0
+
+	species_sounds = "Raccoon"
+	pain_emote_1p = list("chitter")
+	pain_emote_3p = list("chitters")
+
+/mob/living/simple_mob/animal/passive/raccoon_ch/Initialize()
+	. = ..()
+	ghostjoin = 1
+	ghostjoin_icon()
+	active_ghost_pods |= src
+
+/mob/living/simple_mob/animal/passive/raccoon_ch/Destroy()
+	active_ghost_pods -= src
+	return ..()
 
 /datum/say_list/raccoon_ch
 	speak = list("HSSSSS")

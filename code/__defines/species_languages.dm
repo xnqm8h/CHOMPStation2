@@ -38,6 +38,7 @@
 #define ALLERGEN_SUGARS		0x400	// For unathi-like reactions
 #define ALLERGEN_EGGS		0x800	// For Skrell eggs allergy
 #define ALLERGEN_STIMULANT	0x1000	// Stimulants are what makes the Tajaran heart go ruh roh - not just coffee!
+#define ALLERGEN_CHOCOLATE	0x2000	// Makes dogs die if they want to?
 
 // Allergen reactions
 #define AG_PHYS_DMG	0x1	// brute
@@ -86,18 +87,15 @@
 #define LANGUAGE_ROOTLOCAL "Local Rootspeak"
 #define LANGUAGE_ROOTGLOBAL "Global Rootspeak"
 #define LANGUAGE_CULT "Cult"
-#define LANGUAGE_OCCULT "Occult"
 #define LANGUAGE_CHANGELING "Changeling"
 #define LANGUAGE_VOX "Vox-Pidgin"
 #define LANGUAGE_TERMINUS "Terminus"
-#define LANGUAGE_SKRELLIANFAR "High Skrellian"
 #define LANGUAGE_MINBUS "Minbus"
 #define LANGUAGE_EVENT1 "Occursus"
 #define LANGUAGE_AKHANI "Akhani"
 #define LANGUAGE_ALAI "Alai"
 #define LANGUAGE_ZADDAT "Vedahq"
 #define LANGUAGE_PROMETHEAN "Promethean Biolinguistics"
-#define LANGUAGE_BLOB "Chemosense Transmission"
 #define LANGUAGE_GIBBERISH "Babel"
 
 // Language flags.

@@ -65,7 +65,18 @@ var/list/name_to_material
 	. = list()
 	for(var/mat in matter)
 		var/datum/material/M = GET_MATERIAL_REF(mat)
-		.[M] = matter[mat]
+		if(M.composite_material && M.composite_material.len)
+			for(var/submat in M.composite_material)
+				var/datum/material/SM = GET_MATERIAL_REF(submat)
+				if(SM in .)
+					.[SM] += matter[mat]*(M.composite_material[submat]/SHEET_MATERIAL_AMOUNT)
+				else
+					.[SM] = matter[mat]*(M.composite_material[submat]/SHEET_MATERIAL_AMOUNT)
+		else
+			if(M in .)
+				.[M] += matter[mat]
+			else
+				.[M] = matter[mat]
 
 // Builds the datum list above.
 /proc/populate_material_list(force_remake=0)
@@ -374,3 +385,6 @@ var/list/name_to_material
 			new /datum/stack_recipe("[display_name] blade", /obj/item/weapon/material/butterflyblade, 6, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]", pass_stack_color = TRUE),
 			new /datum/stack_recipe("[display_name] defense wire", /obj/item/weapon/material/barbedwire, 10, time = 1 MINUTE, one_per_turf = 0, on_floor = 1, supplied_material = "[name]", pass_stack_color = TRUE)
 		)
+
+/datum/material/proc/get_wall_texture()
+	return

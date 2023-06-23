@@ -85,10 +85,10 @@
 /proc/is_admin(var/mob/user)
 	return check_rights(R_ADMIN|R_EVENT, 0, user) != 0
 
-
+/*	CHOMPEdit - See modular_chomp/code/_HELPERS/type2type/color.dm
 /proc/hsl2rgb(h, s, l)
 	return //TODO: Implement
-
+*/
 /*
 	Miss Chance
 */
@@ -208,9 +208,10 @@
 			if(lowertext(newletter)=="s")	newletter="ch"
 			if(lowertext(newletter)=="a")	newletter="ah"
 			if(lowertext(newletter)=="c")	newletter="k"
-		switch(rand(1,15))
+		switch(rand(1,9))
 			if(1,3,5,8)	newletter="[lowertext(newletter)]"
-			if(2,4,6,15)	newletter="[uppertext(newletter)]"
+			//if(2,4,6,15)	newletter="[uppertext(newletter)]"
+			if(2,4,6,9)	newletter="[uppertext(newletter)]"
 			if(7)	newletter+="'"
 			//if(9,10)	newletter="<b>[newletter]</b>"
 			//if(11,12)	newletter="<big>[newletter]</big>"
@@ -408,7 +409,7 @@ var/list/intents = list(I_HELP,I_DISARM,I_GRAB,I_HURT)
 		return // Can't talk in deadchat if you can't see it.
 
 	for(var/mob/M in player_list)
-		if(M.client && ((!istype(M, /mob/new_player) && M.stat == DEAD) || (M.client.holder && M.client.holder.rights)) && M.is_preference_enabled(/datum/client_preference/show_dsay))
+		if(M.client && ((!istype(M, /mob/new_player) && M.stat == DEAD) || (M.client.holder && M.client.holder.rights && M.is_preference_enabled(/datum/client_preference/holder/show_staff_dsay))) && M.is_preference_enabled(/datum/client_preference/show_dsay))
 			var/follow
 			var/lname
 			if(M.forbid_seeing_deadchat && !M.client.holder)
@@ -438,7 +439,7 @@ var/list/intents = list(I_HELP,I_DISARM,I_GRAB,I_HURT)
 
 /proc/say_dead_object(var/message, var/obj/subject = null)
 	for(var/mob/M in player_list)
-		if(M.client && ((!istype(M, /mob/new_player) && M.stat == DEAD) || (M.client.holder && M.client.holder.rights)) && M.is_preference_enabled(/datum/client_preference/show_dsay))
+		if(M.client && ((!istype(M, /mob/new_player) && M.stat == DEAD) || (M.client.holder && M.client.holder.rights && M.is_preference_enabled(/datum/client_preference/holder/show_staff_dsay))) && M.is_preference_enabled(/datum/client_preference/show_dsay))
 			var/follow
 			var/lname = "Game Master"
 			if(M.forbid_seeing_deadchat && !M.client.holder)
@@ -481,9 +482,13 @@ var/list/intents = list(I_HELP,I_DISARM,I_GRAB,I_HURT)
 		if(!name)
 			name = (C.holder && C.holder.fakekey) ? C.holder.fakekey : C.key
 		if(joined_ghosts)
-			say_dead_direct("The ghost of <span class='name'>[name]</span> now [pick("skulks","lurks","prowls","creeps","stalks")] among the dead. [message]")
+			//say_dead_direct("The ghost of <span class='name'>[name]</span> now [pick("skulks","lurks","prowls","creeps","stalks")] among the dead. [message]") //ChompEDIT - Removed for ghost privacy
+			log_and_message_admins("<span class='name'>[name]</span> entered ghost/observe mode. [message]") //ChompEDIT
+
 		else
-			say_dead_direct("<span class='name'>[name]</span> no longer [pick("skulks","lurks","prowls","creeps","stalks")] in the realm of the dead. [message]")
+			//say_dead_direct("<span class='name'>[name]</span> no longer [pick("skulks","lurks","prowls","creeps","stalks")] in the realm of the dead. [message]") //ChompEDIT - Removed for ghost privacy
+			log_and_message_admins("<span class='name'>[name]</span> left ghost/observe mode. [message]") //ChompEDIT
+
 
 /mob/proc/switch_to_camera(var/obj/machinery/camera/C)
 	if (!C.can_use() || stat || (get_dist(C, src) > 1 || machine != src || blinded || !canmove))
