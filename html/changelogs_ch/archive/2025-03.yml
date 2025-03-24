@@ -516,3 +516,10 @@
       again.
   crabcube:
   - balance: tesh health and damage
+2025-03-24:
+  CHOMPStation2StaffMirrorBot:
+  - bugfix: Fixed train redgate top layer using updown ladders rather than just down
+      ladders.
+  - rscadd: text surrounded by || text || will now be spoilered in the statpanel
+  - bugfix: examine will be auto focussed again if the setting is enabled
+  - maptweak: added xenoarch storage to the stellar delight
