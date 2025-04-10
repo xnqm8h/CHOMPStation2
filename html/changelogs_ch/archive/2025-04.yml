@@ -98,3 +98,6 @@
       on Player Characters
   - balance: Point blank shots will still always 100% hit Player Characters no matter
       your evasion. Just a reminder!
+2025-04-10:
+  CHOMPStation2StaffMirrorBot:
+  - code_imp: tgui core 2.0
